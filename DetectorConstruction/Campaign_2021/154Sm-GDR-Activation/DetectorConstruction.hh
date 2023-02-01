@@ -20,6 +20,9 @@ along with utr.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <string>
+using std::string;
+
 #include "G4VUserDetectorConstruction.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
@@ -33,4 +36,5 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
   void print_info() const;
 
   unsigned int Max_Sensitive_Detector_ID;
+  std::string Sensitive_Detector_Logical_Volume_Name;
 };

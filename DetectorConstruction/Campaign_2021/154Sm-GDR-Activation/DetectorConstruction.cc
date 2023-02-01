@@ -379,6 +379,26 @@ double natCeO_Container_Mass;
 double Au_Mass ;
 double targetAu_Density;
 
+//-----Collimator-----
+
+const auto collimatorRoomCollimatorAperture = 8. * mm;
+const auto utrFirstLeadWallToTargetPos = 60. * inch; // From nutr: Estimated
+const auto utrFirstLeadWallLength = 8. * inch; // From nutr
+const auto utrUpstreamWallToTargetPos = utrFirstLeadWallToTargetPos + utrFirstLeadWallLength;
+const auto utrUpstreamWallThickness = 162. * mm; // Measured off utr drawings
+const auto collimatorRoomSecondLeadWallLength = 16. * inch; // From nutr
+const auto activationTargetHolderToTargetPos = 54.0 * inch; // From ELOG https://elog.ikp.physik.tu-darmstadt.de/clovershare/2025
+const auto collimatorRoomSecondLeadWallToTargetPos = utrUpstreamWallToTargetPos + utrUpstreamWallThickness;
+const auto collimatorRoomFirstLeadWallToTargetPos = collimatorRoomSecondLeadWallToTargetPos + collimatorRoomSecondLeadWallLength + 320. * mm; // From nutr
+const auto collimatorRoomFirstLeadWallLength = 16. * inch; // From nutr
+const auto collimatorRoomCollimatorToTargetPos = collimatorRoomFirstLeadWallToTargetPos + collimatorRoomFirstLeadWallLength + 200. * mm;
+
+const auto collisionPointToCollimator = 53. * m;
+const auto collisionPointToActivationTargetPos = collisionPointToCollimator + collimatorRoomCollimatorToTargetPos + activationTargetHolderToTargetPos;
+const auto beamDiameterAtActivationTargetPos = collimatorRoomCollimatorAperture * collisionPointToActivationTargetPos / collisionPointToCollimator;
+
+
+
 std::cout << "DetectorConstruction: Requested TARGET is '" << TARGET << "'\n";
 if (TARGET == "SmO_8") {
 natSmO_Container_Mass = (2.05587-1.88185) * g;
@@ -470,6 +490,11 @@ auto *ActivationTargetSolidLogical = new G4LogicalVolume(ActivationTargetSolid, 
 new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ActivationTargetContainerLength/2.+ ActivationTargetThicknessSmO/2.+ ActivationTargetContainerThickness), ActivationTargetSolidLogical, "activationtarget", ActivationTargetContainerLogical, false, 0);
 ActivationTargetSolidLogical->SetVisAttributes(orange);
 
+auto *ActivationTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid",0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetThicknessSmO / 2., 0., twopi);
+auto *ActivationTargetIrradiatedLogical = new G4LogicalVolume(ActivationTargetIrradiatedSolid, activation154Sm_nat_container_Material, "ActivationTargetIrradiatedLogical");
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), ActivationTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetSolidLogical, false, 0);
+ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
+
 auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidth / 2., 0, twopi);
 auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"),"ActivationTargetContainerAirSolid");
 new G4PVPlacement(nullptr, G4ThreeVector(0,0, ActivationTargetContainerLength / 2. - ActivationTargetContainerAirWidth / 2.), ActivationTargetContainerAirLogical, "ActivationTargetContainerAir", ActivationTargetContainerLogical, false, 0);
@@ -484,15 +509,14 @@ auto *ActivationTargetLidAirSolid = new G4Tubs("ActivationTargetLidAirSolid", 0.
 auto *ActivationTargetLidAirLogical = new G4LogicalVolume(ActivationTargetLidAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "activationtargetLidAir");
 new G4PVPlacement(nullptr,G4ThreeVector(0,0,+ActivationTargetLidHeight / 2. - ActivationTargetLidInnerHeight / 2. ), ActivationTargetLidAirLogical, "activationtargetLIDAIR", ActivationTargetLidLogical, false, 0);
 ActivationTargetLidAirLogical->SetVisAttributes(blue);
-
 }
 else if ( TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6"|| TARGET == "CeO_7"){
-  
+
 targetnatCeO_Density = natCeO_Container_Mass / (pi / 4. * activationTargetInnerDiameter * activationTargetInnerDiameter * ActivationTargetThicknessCeO);
 
 auto *activationCeO_nat_container_Material = new G4Material("natSmO_Container8_Material", targetnatCeO_Density, 2);
 activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("Ce"), 1); // 1 Ce atoms in Ce(1)O(2)
-activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("O"), 2); // 32 O atoms in Ce(1)O(2)
+activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("O"), 2); // 2 O atoms in Ce(1)O(2)
 
 auto *ActivationTargetContainerSolid = new G4Tubs("ActivationTargteHolderSolid", 0., ActivationTargetContainerOuterDiameter / 2., ActivationTargetContainerLengthCeO / 2., 0, twopi);
 auto *ActivationTargetContainerLogical = new G4LogicalVolume(ActivationTargetContainerSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "ActivationTargetContainerLogical");
@@ -503,6 +527,11 @@ auto *ActivationTargetSolid = new G4Tubs("ActivationTargetSolid", 0.,ActivationT
 auto *ActivationTargetSolidLogical = new G4LogicalVolume(ActivationTargetSolid, activationCeO_nat_container_Material,"ActivationTargetLogical");
 new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ActivationTargetContainerLengthCeO /2. + ActivationTargetThicknessCeO/2. + ActivationTargetContainerThickness), ActivationTargetSolidLogical, "activationtarget", ActivationTargetContainerLogical, false, 0);
 ActivationTargetSolidLogical->SetVisAttributes(orange);
+
+auto *ActivationTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid",0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetThicknessCeO / 2., 0., twopi);
+auto *ActivationTargetIrradiatedLogical = new G4LogicalVolume(ActivationTargetIrradiatedSolid, activationCeO_nat_container_Material, "ActivationTargetIrradiatedLogical");
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), ActivationTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetSolidLogical, false, 0);
+ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
 
 auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidthCeO / 2., 0, twopi);
 auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"),"ActivationTargetContainerAirSolid");
@@ -521,10 +550,18 @@ ActivationTargetLidAirLogical->SetVisAttributes(blue);
 }
 else if (TARGET == "AU_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"){
 
+targetAu_Density = Au_Mass / (pi / 4. * ActivationTargetAuOuterDiameter * ActivationTargetAuOuterDiameter * ActivationTargetAuThickness);
+auto *targetNatCMaterial = new G4Material("targetAuMaterial", targetAu_Density, nist->FindOrBuildMaterial("G4_AU"));
+
 auto *ActivationTargetAuSolid = new G4Tubs("ActivationTargetAuSolid", 0., ActivationTargetAuOuterDiameter / 2., ActivationTargetAuThickness / 2., 0, twopi);
-auto *ActivationTargetAuLogical = new G4LogicalVolume(ActivationTargetAuSolid, nist->FindOrBuildMaterial("G4_Au"), "ActivationTargetAuLogical");
+auto *ActivationTargetAuLogical = new G4LogicalVolume(ActivationTargetAuSolid, targetNatCMaterial, "ActivationTargetAuLogical");
 new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ThreeScrewHolderAirLength / 2. +ThreeScrewHolderGrooveWidth / 2. +ThreeScrewHolderBottomAirWidth + offset), ActivationTargetAuLogical, "ActivationTargetAu", ThreeScrewHolderAirLogical, false,0);
 ActivationTargetAuLogical->SetVisAttributes(orange);
+
+auto *AuTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid",0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetAuThickness / 2., 0., twopi);
+auto *AuTargetIrradiatedLogical = new G4LogicalVolume(AuTargetIrradiatedSolid, targetNatCMaterial, "AuTargetIrradiatedLogical");
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), AuTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetAuLogical, false, 0);
+AuTargetIrradiatedLogical->SetVisAttributes(orange);
 }
 if (TARGET == "SmO_8" || TARGET == "SmO_9" || TARGET == "SmO_10" || TARGET == "SmO_11" || TARGET == "SmO_12" || TARGET == "SmO_13" || TARGET == "SmO_14" || TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6"|| TARGET == "CeO_7" || TARGET == "MixSource3"){
 
@@ -553,12 +590,13 @@ auto *detectorEndCapLogical = new G4LogicalVolume(detectorEndCapSolid, nist->Fin
 new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI+ detectorFirstLayerThickness+ detectorSecondLayerLength + detectorEndCapThickness / 2.), detectorEndCapLogical, "detectorEndCap", worldLogical, false, 0);
 detectorEndCapLogical->SetVisAttributes(grey);
 
+Sensitive_Detector_Logical_Volume_Name = "detectorCrystalLogical";
 auto *detectorCrystalSolid = new G4Tubs("detectorCrystalSolid", detectorCrystalInnerDiameter / 2., detectorCrystalOuterDiameter / 2., detectorCrystalLength / 2., 0, twopi);
-auto *detectorCrystalLogical = new G4LogicalVolume(detectorCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),"detectorCrystalLogical");
+auto *detectorCrystalLogical = new G4LogicalVolume(detectorCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),Sensitive_Detector_Logical_Volume_Name);
 new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorSecondLayerLength / 2. + detectorCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCrystalLogical, "detectorCrystal", detectorSecondLayerVacuumLogical, false, 0);
 detectorCrystalLogical->SetVisAttributes(blue);
 }
-else if (TARGET == "AU_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"){
+else if (TARGET == "AU_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"|| TARGET == "MixSource4"){
 
 auto *detectorCoaxialFirstLayerSolid = new G4Tubs("detectorCoaxialFirstLayerSolid", detectorCoaxialFirstLayerInnerDiameter / 2., detectorCoaxialFirstLayerOuterDiameter / 2., detectorCoaxialFirstLayerThickness / 2., 0, twopi);
 auto *detectorCoaxialFirstLayerLogical = new G4LogicalVolume(detectorCoaxialFirstLayerSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorCoaxialFirstLayerSolid");
@@ -586,7 +624,8 @@ new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholde
 detectorCoaxialEndCapLogical->SetVisAttributes(grey);
 
 auto *detectorCoaxialCrystalSolid = new G4Tubs("detectorCoaxialCrystalSolid", detectorCoaxialCrystalInnerDiameter / 2., detectorCoaxialCrystalOuterDiameter / 2., detectorCoaxialCrystalLength / 2., 0, twopi);
-auto *detectorCoaxialCrystalLogical = new G4LogicalVolume(detectorCoaxialCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),"detectorCoaxialCrystalLogical");
+Sensitive_Detector_Logical_Volume_Name = "detectorCoaxialCrystalLogical";
+auto *detectorCoaxialCrystalLogical = new G4LogicalVolume(detectorCoaxialCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),Sensitive_Detector_Logical_Volume_Name);
 new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorCoaxialSecondLayerLength / 2. + detectorCoaxialCrystalLength / 2. + detectorCrystalAluminiumWindowDistance / 2.), detectorCoaxialCrystalLogical, "detectorCrystal", detectorCoaxialSecondLayerVacuumLogical, false, 0);
 detectorCoaxialCrystalLogical->SetVisAttributes(blue);
 
@@ -594,11 +633,16 @@ auto *detectorCoaxialAirLayerVacuumSolid = new G4Tubs("detectorCoaxialAirLayerVa
 auto *detectorCoaxialAirLayerVacuumLogical = new G4LogicalVolume(detectorCoaxialAirLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorCoaxialAirLayerVacuumSolid");
 new G4PVPlacement(nullptr, G4ThreeVector(0,0., detectorCoaxialCrystalLength / 2. - detectorCoaxialCrystalAirLength / 2.), detectorCoaxialAirLayerVacuumLogical, "detectorSecondLayer", detectorCoaxialCrystalLogical, false, 0);
 detectorCoaxialAirLayerVacuumLogical->SetVisAttributes(cyan);
-
-} 
-
-return worldPhysical;
-
 }
+return worldPhysical;
+}
+
 void DetectorConstruction::ConstructSDandField() {
+
+  EnergyDepositionSD *SensitiveDetector = new EnergyDepositionSD(Sensitive_Detector_Logical_Volume_Name, Sensitive_Detector_Logical_Volume_Name);
+  G4SDManager::GetSDMpointer()->AddNewDetector(SensitiveDetector);
+  SensitiveDetector->SetDetectorID(0);
+  SetSensitiveDetector(Sensitive_Detector_Logical_Volume_Name, SensitiveDetector, true);
+
+  Max_Sensitive_Detector_ID = 0; // Necessary for EVENT_EVENTWISE output mode
 }
