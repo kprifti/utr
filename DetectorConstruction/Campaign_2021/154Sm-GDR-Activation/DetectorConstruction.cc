@@ -188,20 +188,13 @@ const auto greendetectorholderwidthIII = 38.1 * mm;//From technical draw
 //------Detector Planar----
 
 const auto detectorFirstLayerOuterDiameter = 76.1 * mm;
-const auto detectorFirstLayerInnerDiameter = 58.42 * mm;
-const auto detectorFirstLayerThickness = 0.1 * mm;
 
 const auto detectorWindowOuterDiameter = 58.42 * mm;
 const auto detectorWindowInnerDiameter = 0. * mm;
 const auto detectorWindowThickness = 0.5 * mm;
 
-const auto detectorSecondLayerOuterDiameter = 76.1 * mm;
-const auto detectorSecondLayerInnerDiameter = 75.6 * mm;
-const auto detectorSecondLayerLength = 140. * mm;
-
-const auto detectorEndCapOuterDiameter = 76.1 * mm;
-const auto detectorEndCapInnerDiameter = 0. * mm;
-const auto detectorEndCapThickness = 0.1 * mm;
+const auto detectorSecondLayerInnerDiameter = 73.6 * mm;
+const auto detectorNr3Length = 140. * mm;
 
 const auto detectorCrystalOuterDiameter = 58.42 * mm;
 const auto detectorCrystalInnerDiameter = 0. * mm;
@@ -209,23 +202,12 @@ const auto detectorCrystalLength = 21.* mm;
 
 const auto detectorCrystalBerylliumWindowDistance = 5. * mm;
 
+const auto detectorNr3VacuumLength = 138* mm;
+
 //-------Detector Coaxial-----
 
-const auto detectorCoaxialFirstLayerOuterDiameter = 76.1 * mm;
-const auto detectorCoaxialFirstLayerInnerDiameter = 58.42 * mm;
-const auto detectorCoaxialFirstLayerThickness = 0.1 * mm;
-
-const auto detectorCoaxialWindowOuterDiameter = 58.42 * mm;
-const auto detectorCoaxialWindowInnerDiameter = 0. * mm;
-const auto detectorCoaxialWindowThickness = 0.5 * mm;
-
-const auto detectorCoaxialSecondLayerOuterDiameter = 76.1 * mm;
-const auto detectorCoaxialSecondLayerInnerDiameter = 75.6 * mm;
+const auto detectorNr4VacuumLength = 138*mm;
 const auto detectorCoaxialSecondLayerLength = 140. * mm;
-
-const auto detectorCoaxialEndCapOuterDiameter = 76.1 * mm;
-const auto detectorCoaxialEndCapInnerDiameter = 0. * mm;
-const auto detectorCoaxialEndCapThickness = 0.1 * mm;
 
 const auto detectorCoaxialCrystalOuterDiameter = 56. * mm;
 const auto detectorCoaxialCrystalInnerDiameter = 0. * mm;
@@ -233,9 +215,6 @@ const auto detectorCoaxialCrystalLength = 53.5* mm;
 
 const auto detectorCoaxialCrystalAirOuterDiameter = 9. * mm;
 const auto detectorCoaxialCrystalAirLength = 22. * mm;
-
-
-const auto detectorCrystalAluminiumWindowDistance = 5. * mm;
 
 //-----Table-----
 
@@ -536,7 +515,7 @@ ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
 auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidthCeO / 2., 0, twopi);
 auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"),"ActivationTargetContainerAirSolid");
 new G4PVPlacement(nullptr, G4ThreeVector(0,0, ActivationTargetContainerLengthCeO / 2. - ActivationTargetContainerAirWidthCeO / 2.), ActivationTargetContainerAirLogical, "ActivationTargetContainerAir", ActivationTargetContainerLogical, false, 0);
-ActivationTargetContainerAirLogical->SetVisAttributes(yellow);
+ActivationTargetContainerAirLogical->SetVisAttributes(blue);
 
 auto *ActivationTargetLidSolid = new G4Tubs("ActivationTargetLidSolid", 0., ActivationTargetLidOuterDiameter / 2., ActivationTargetLidHeightCeO / 2., 0, twopi);
 auto *ActivationTargetLidLogical = new G4LogicalVolume(ActivationTargetLidSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "activationtargetlidLogical"); 
@@ -548,10 +527,10 @@ auto *ActivationTargetLidAirLogical = new G4LogicalVolume(ActivationTargetLidAir
 new G4PVPlacement(nullptr,G4ThreeVector(0,0,+ActivationTargetLidHeightCeO / 2. - ActivationTargetLidInnerHeightCeO / 2.), ActivationTargetLidAirLogical, "activationtargetLIDAIR", ActivationTargetLidLogical, false, 0);
 ActivationTargetLidAirLogical->SetVisAttributes(blue);
 }
-else if (TARGET == "AU_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"){
+else if (TARGET == "Au_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"){
 
 targetAu_Density = Au_Mass / (pi / 4. * ActivationTargetAuOuterDiameter * ActivationTargetAuOuterDiameter * ActivationTargetAuThickness);
-auto *targetNatCMaterial = new G4Material("targetAuMaterial", targetAu_Density, nist->FindOrBuildMaterial("G4_AU"));
+auto *targetNatCMaterial = new G4Material("targetAuMaterial", targetAu_Density, nist->FindOrBuildMaterial("G4_Au"));
 
 auto *ActivationTargetAuSolid = new G4Tubs("ActivationTargetAuSolid", 0., ActivationTargetAuOuterDiameter / 2., ActivationTargetAuThickness / 2., 0, twopi);
 auto *ActivationTargetAuLogical = new G4LogicalVolume(ActivationTargetAuSolid, targetNatCMaterial, "ActivationTargetAuLogical");
@@ -565,74 +544,57 @@ AuTargetIrradiatedLogical->SetVisAttributes(orange);
 }
 if (TARGET == "SmO_8" || TARGET == "SmO_9" || TARGET == "SmO_10" || TARGET == "SmO_11" || TARGET == "SmO_12" || TARGET == "SmO_13" || TARGET == "SmO_14" || TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6"|| TARGET == "CeO_7" || TARGET == "MixSource3"){
 
-auto *detectorFirstLayerSolid = new G4Tubs("detectorFirstLayerSolid", detectorFirstLayerInnerDiameter / 2., detectorFirstLayerOuterDiameter / 2., detectorFirstLayerThickness / 2., 0, twopi);
-auto *detectorFirstLayerLogical = new G4LogicalVolume(detectorFirstLayerSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorFirstLayerSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI +detectorFirstLayerThickness / 2. ), detectorFirstLayerLogical, "detectorFirstLayer", worldLogical, false, 0);
-detectorFirstLayerLogical->SetVisAttributes(grey);
+auto *detectorNr3Solid = new G4Tubs("detectorNr3Solid", 0., detectorFirstLayerOuterDiameter / 2., detectorNr3Length / 2., 0, twopi);
+auto *detectorNr3Logical = new G4LogicalVolume(detectorNr3Solid, nist->FindOrBuildMaterial("G4_Al"), "detectorNr3Solid");
+new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +detectorNr3Length - greendetectorholderwidthII), detectorNr3Logical, "detectorNr3", worldLogical, false, 0);
+detectorNr3Logical->SetVisAttributes(grey);
 
 auto *detectorWindowSolid = new G4Tubs("detectorWindowSolid", detectorWindowInnerDiameter / 2., detectorWindowOuterDiameter / 2., detectorWindowThickness / 2., 0, twopi);
 auto *detectorWindowLogical = new G4LogicalVolume(detectorWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorWindowSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), detectorWindowLogical, "detectorFirstLayer", detectorFirstLayerLogical, false, 0);
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorNr3Length/2. + detectorWindowThickness / 2), detectorWindowLogical, "detectorFirstLayer", detectorNr3Logical, false, 0);
 detectorWindowLogical->SetVisAttributes(darkGrey);
 
-auto *detectorSecondLayerSolid = new G4Tubs("detectorSecondLayerSolid", detectorSecondLayerInnerDiameter / 2., detectorSecondLayerOuterDiameter / 2., detectorSecondLayerLength / 2., 0, twopi);
-auto *detectorSecondLayerLogical = new G4LogicalVolume(detectorSecondLayerSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorSecondLayerSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI + detectorFirstLayerThickness + detectorSecondLayerLength / 2.), detectorSecondLayerLogical, "detectorSecondLayer", worldLogical, false, 0);
-detectorSecondLayerLogical->SetVisAttributes(grey);
-
-auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorSecondLayerLength / 2., 0, twopi);
-auto *detectorSecondLayerVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0.0), detectorSecondLayerVacuumLogical, "detectorSecondLayer", detectorSecondLayerLogical, false, 0);
-detectorSecondLayerVacuumLogical->SetVisAttributes(invisible);
-
-auto *detectorEndCapSolid = new G4Tubs("detectorEndCapSolid", detectorEndCapInnerDiameter / 2., detectorEndCapOuterDiameter / 2., detectorEndCapThickness / 2., 0, twopi);
-auto *detectorEndCapLogical = new G4LogicalVolume(detectorEndCapSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorEndCapSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI+ detectorFirstLayerThickness+ detectorSecondLayerLength + detectorEndCapThickness / 2.), detectorEndCapLogical, "detectorEndCap", worldLogical, false, 0);
-detectorEndCapLogical->SetVisAttributes(grey);
+auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorNr3VacuumLength / 2., 0, twopi);
+auto *detectorVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorWindowThickness), detectorVacuumLogical, "detectorSecondLayer", detectorNr3Logical, false, 0);
+detectorVacuumLogical->SetVisAttributes(blue);
 
 Sensitive_Detector_Logical_Volume_Name = "detectorCrystalLogical";
 auto *detectorCrystalSolid = new G4Tubs("detectorCrystalSolid", detectorCrystalInnerDiameter / 2., detectorCrystalOuterDiameter / 2., detectorCrystalLength / 2., 0, twopi);
 auto *detectorCrystalLogical = new G4LogicalVolume(detectorCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),Sensitive_Detector_Logical_Volume_Name);
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorSecondLayerLength / 2. + detectorCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCrystalLogical, "detectorCrystal", detectorSecondLayerVacuumLogical, false, 0);
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorNr3Length / 2. + detectorCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCrystalLogical, "detectorCrystal", detectorVacuumLogical, false, 0);
 detectorCrystalLogical->SetVisAttributes(blue);
+
 }
-else if (TARGET == "AU_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"|| TARGET == "MixSource4"){
+else if (TARGET == "Au_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"|| TARGET == "MixSource4"){
 
-auto *detectorCoaxialFirstLayerSolid = new G4Tubs("detectorCoaxialFirstLayerSolid", detectorCoaxialFirstLayerInnerDiameter / 2., detectorCoaxialFirstLayerOuterDiameter / 2., detectorCoaxialFirstLayerThickness / 2., 0, twopi);
-auto *detectorCoaxialFirstLayerLogical = new G4LogicalVolume(detectorCoaxialFirstLayerSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorCoaxialFirstLayerSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI +detectorCoaxialFirstLayerThickness / 2. ), detectorCoaxialFirstLayerLogical, "detectorFirstLayer", worldLogical, false, 0);
-detectorCoaxialFirstLayerLogical->SetVisAttributes(grey);
 
-auto *detectorCoaxialWindowSolid = new G4Tubs("detectorCoaxialWindowSolid", detectorCoaxialWindowInnerDiameter / 2., detectorCoaxialWindowOuterDiameter / 2., detectorCoaxialWindowThickness / 2., 0, twopi);
-auto *detectorCoaxialWindowLogical = new G4LogicalVolume(detectorCoaxialWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorCoaxialWindowSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), detectorCoaxialWindowLogical, "detectorFirstLayer", detectorCoaxialFirstLayerLogical, false, 0);
-detectorCoaxialWindowLogical->SetVisAttributes(darkGrey);
+auto *detectorNr4Solid = new G4Tubs("detectorNr4Solid", 0., detectorFirstLayerOuterDiameter / 2., detectorNr3Length / 2., 0, twopi);
+auto *detectorNr3Logical = new G4LogicalVolume(detectorNr4Solid, nist->FindOrBuildMaterial("G4_Al"), "detectorNr4Solid");
+new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +detectorNr3Length - greendetectorholderwidthII), detectorNr3Logical, "detectorNr3", worldLogical, false, 0);
+detectorNr3Logical->SetVisAttributes(grey);
 
-auto *detectorCoaxialSecondLayerSolid = new G4Tubs("detectorCoaxialSecondLayerSolid", detectorCoaxialSecondLayerInnerDiameter / 2., detectorCoaxialSecondLayerOuterDiameter / 2., detectorCoaxialSecondLayerLength / 2., 0, twopi);
-auto *detectorCoaxialSecondLayerLogical = new G4LogicalVolume(detectorCoaxialSecondLayerSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorCoaxialSecondLayerSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI + detectorCoaxialFirstLayerThickness + detectorCoaxialSecondLayerLength / 2.), detectorCoaxialSecondLayerLogical, "detectorSecondLayer", worldLogical, false, 0);
-detectorCoaxialSecondLayerLogical->SetVisAttributes(grey);
+auto *detectorWindowSolid = new G4Tubs("detectorWindowSolid", detectorWindowInnerDiameter / 2., detectorWindowOuterDiameter / 2., detectorWindowThickness / 2., 0, twopi);
+auto *detectorWindowLogical = new G4LogicalVolume(detectorWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorWindowSolid");
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorNr3Length/2. + detectorWindowThickness / 2), detectorWindowLogical, "detectorFirstLayer", detectorNr3Logical, false, 0);
+detectorWindowLogical->SetVisAttributes(darkGrey);
 
-auto *detectorCoaxialSecondLayerVacuumSolid = new G4Tubs("detectorCoaxialSecondLayerVacuumSolid", 0., detectorCoaxialSecondLayerInnerDiameter / 2., detectorCoaxialSecondLayerLength / 2., 0, twopi);
-auto *detectorCoaxialSecondLayerVacuumLogical = new G4LogicalVolume(detectorCoaxialSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorCoaxialSecondLayerVacuumSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), detectorCoaxialSecondLayerVacuumLogical, "detectorSecondLayer", detectorCoaxialSecondLayerLogical, false, 0);
-detectorCoaxialSecondLayerVacuumLogical->SetVisAttributes(invisible);
+auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorNr4VacuumLength / 2., 0, twopi);
+auto *detectorVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,- detectorWindowThickness), detectorVacuumLogical, "detectorSecondLayer", detectorNr3Logical, false, 0);
+detectorVacuumLogical->SetVisAttributes(blue);
 
-auto *detectorCoaxialEndCapSolid = new G4Tubs("detectorCoaxialEndCapSolid", detectorCoaxialEndCapInnerDiameter / 2., detectorCoaxialEndCapOuterDiameter / 2., detectorCoaxialEndCapThickness / 2., 0, twopi);
-auto *detectorCoaxialEndCapLogical = new G4LogicalVolume(detectorCoaxialEndCapSolid, nist->FindOrBuildMaterial("G4_Al"), "detectorCoaxialEndCapSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI+ detectorCoaxialFirstLayerThickness+ detectorCoaxialSecondLayerLength + detectorCoaxialEndCapThickness / 2.), detectorCoaxialEndCapLogical, "detectorEndCap", worldLogical, false, 0);
-detectorCoaxialEndCapLogical->SetVisAttributes(grey);
-
-auto *detectorCoaxialCrystalSolid = new G4Tubs("detectorCoaxialCrystalSolid", detectorCoaxialCrystalInnerDiameter / 2., detectorCoaxialCrystalOuterDiameter / 2., detectorCoaxialCrystalLength / 2., 0, twopi);
 Sensitive_Detector_Logical_Volume_Name = "detectorCoaxialCrystalLogical";
+auto *detectorCoaxialCrystalSolid = new G4Tubs("detectorCoaxialCrystalSolid", detectorCoaxialCrystalInnerDiameter / 2., detectorCoaxialCrystalOuterDiameter / 2., detectorCoaxialCrystalLength / 2., 0, twopi);
 auto *detectorCoaxialCrystalLogical = new G4LogicalVolume(detectorCoaxialCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),Sensitive_Detector_Logical_Volume_Name);
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorCoaxialSecondLayerLength / 2. + detectorCoaxialCrystalLength / 2. + detectorCrystalAluminiumWindowDistance / 2.), detectorCoaxialCrystalLogical, "detectorCrystal", detectorCoaxialSecondLayerVacuumLogical, false, 0);
+new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorCoaxialSecondLayerLength / 2. + detectorCoaxialCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCoaxialCrystalLogical, "detectorCrystal", detectorVacuumLogical, false, 0);
 detectorCoaxialCrystalLogical->SetVisAttributes(blue);
 
 auto *detectorCoaxialAirLayerVacuumSolid = new G4Tubs("detectorCoaxialAirLayerVacuumSolid", 0., detectorCoaxialCrystalAirOuterDiameter / 2., detectorCoaxialCrystalAirLength / 2., 0, twopi);
 auto *detectorCoaxialAirLayerVacuumLogical = new G4LogicalVolume(detectorCoaxialAirLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorCoaxialAirLayerVacuumSolid");
 new G4PVPlacement(nullptr, G4ThreeVector(0,0., detectorCoaxialCrystalLength / 2. - detectorCoaxialCrystalAirLength / 2.), detectorCoaxialAirLayerVacuumLogical, "detectorSecondLayer", detectorCoaxialCrystalLogical, false, 0);
 detectorCoaxialAirLayerVacuumLogical->SetVisAttributes(cyan);
+
 }
 return worldPhysical;
 }
