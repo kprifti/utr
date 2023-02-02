@@ -22,7 +22,6 @@ along with utr.  If not, see <http://www.gnu.org/licenses/>.
 #include "DetectorConstructionConfig.hh"
 #include "utrConfig.h"
 
-
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ios.hh"
@@ -69,534 +68,527 @@ DetectorConstruction::~DetectorConstruction() {}
 
 G4VPhysicalVolume *DetectorConstruction::Construct() {
 
-const G4Colour invisible(1.0, 1.0, 1.0, 0.);
-const G4Colour white(1.0, 1.0, 1.0);
-const G4Colour lightGrey(0.75, 0.75, 0.75);
-const G4Colour grey(0.5, 0.5, 0.5);
-const G4Colour transparentGrey(0.5, 0.5, 0.5, 0.5);
-const G4Colour darkGrey(0.25, 0.25, 0.25);
-const G4Colour black(0.0, 0.0, 0.0);
-const G4Colour red(1.0, 0.0, 0.0);
-const G4Colour green(0.0, 1.0, 0.0);
-const G4Colour blue(0.0, 0.0, 1.0);
-const G4Colour cyan(0.0, 1.0, 1.0);
-const G4Colour magenta(1.0, 0.0, 1.0);
-const G4Colour yellow(1.0, 1.0, 0.0);
-const G4Colour orange(1.0, 0.5, 0.0);
+  const G4Colour invisible(1.0, 1.0, 1.0, 0.);
+  const G4Colour white(1.0, 1.0, 1.0);
+  const G4Colour lightGrey(0.75, 0.75, 0.75);
+  const G4Colour grey(0.5, 0.5, 0.5);
+  const G4Colour transparentGrey(0.5, 0.5, 0.5, 0.5);
+  const G4Colour darkGrey(0.25, 0.25, 0.25);
+  const G4Colour black(0.0, 0.0, 0.0);
+  const G4Colour red(1.0, 0.0, 0.0);
+  const G4Colour green(0.0, 1.0, 0.0);
+  const G4Colour blue(0.0, 0.0, 1.0);
+  const G4Colour cyan(0.0, 1.0, 1.0);
+  const G4Colour magenta(1.0, 0.0, 1.0);
+  const G4Colour yellow(1.0, 1.0, 0.0);
+  const G4Colour orange(1.0, 0.5, 0.0);
 
-G4NistManager *nist = G4NistManager::Instance();
+  G4NistManager *nist = G4NistManager::Instance();
 
-// --------------- General ---------------
+  // --------------- General ---------------
 
-const auto subtractionSolidBuffer = 10. * mm; // G4SubtractionSolid doesn't always fully cut solids when the cutting solid is equal in dimension to the to be cut solid, hence, add some buffer
+  const auto subtractionSolidBuffer = 10. * mm; // G4SubtractionSolid doesn't always fully cut solids when the cutting solid is equal in dimension to the to be cut solid, hence, add some buffer
 
-//------Room-------
+  //------Room-------
 
-const auto activationRoomLength = 1500. * mm; // Measured off utr drawings
-const auto activationRoomHeight = 1000. * mm;
-const auto activationRoomWidth = 500. * mm;
-const auto activationRoomFloorThickness = 200. * mm;
-const auto activationSideWallThickness = 150. * mm;
+  const auto activationRoomLength = 1500. * mm; // Measured off utr drawings
+  const auto activationRoomHeight = 1000. * mm;
+  const auto activationRoomWidth = 500. * mm;
+  const auto activationRoomFloorThickness = 200. * mm;
+  const auto activationSideWallThickness = 150. * mm;
 
-//---------THREE SCREW HOLDER-----
+  //---------THREE SCREW HOLDER-----
 
-const auto ThreeScrewHolderBottomWidth = 1.397 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderBottomLength = ThreeScrewHolderBottomWidth + 5.461 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
-const auto ThreeScrewHolderBottomAirWidth = 5.461 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderTopLength = 6.8072 * mm; //From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-//const auto ThreeScrewHolderTopWidth = 1.6002 * mm;
-const auto ThreeScrewHolderGrooveWidth = 1.6002 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderGrooveOuterDiameter = 38.1 *mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderGrooveInnerDiamter = 36.322 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
+  const auto ThreeScrewHolderBottomWidth = 1.397 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderBottomLength = ThreeScrewHolderBottomWidth + 5.461 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderBottomAirWidth = 5.461 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderTopLength = 6.8072 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  // const auto ThreeScrewHolderTopWidth = 1.6002 * mm;
+  const auto ThreeScrewHolderGrooveWidth = 1.6002 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderGrooveOuterDiameter = 38.1 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderGrooveInnerDiamter = 36.322 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
 
-const auto ThreeScrewHolderLength = ThreeScrewHolderBottomLength + ThreeScrewHolderGrooveWidth + ThreeScrewHolderTopLength;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderOuterDiameter = 38.1 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderInnerDiameter = 0. * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
+  const auto ThreeScrewHolderLength = ThreeScrewHolderBottomLength + ThreeScrewHolderGrooveWidth + ThreeScrewHolderTopLength; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderOuterDiameter = 38.1 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderInnerDiameter = 0. * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
 
-const auto ThreeScrewHolderAirOuterDiamter = 26.416 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
-const auto ThreeScrewHolderAirLength = 12.2682 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
+  const auto ThreeScrewHolderAirOuterDiamter = 26.416 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
+  const auto ThreeScrewHolderAirLength = 12.2682 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
 
-const auto SubtractionSolidBuffer1 = 0.8875 * mm;//From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026 
+  const auto SubtractionSolidBuffer1 = 0.8875 * mm; // From three screw holder technical draw: https://elog.ikp.physik.tu-darmstadt.de//clovershare/2026
 
-//------Activation Target -----
+  //------Activation Target -----
 
-const auto ActivationTargetThicknessSmO = 0.190 * mm;
-const auto ActivationTargetOuterDiameter = 12. * mm;
-const auto ActivationTargetThicknessCeO = 0.550 * mm;
+  const auto ActivationTargetThicknessSmO = 0.190 * mm;
+  const auto ActivationTargetOuterDiameter = 12. * mm;
+  const auto ActivationTargetThicknessCeO = 0.550 * mm;
 
-//-----Activation Target Container---
+  //-----Activation Target Container---
 
-const auto ActivationTargetContainerOuterDiameter = 25.4 * mm; //From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-//const auto ActivationTargetContainerInnerDiameter = 12. * mm;
-const auto ActivationTargetHeight = 4.5 * mm;//From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-const auto ActivationTargetContainerThickness = 1.5 * mm;//From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-const auto ActivationTargetContainerLength = ActivationTargetHeight * mm + ActivationTargetThicknessSmO;
-const auto ActivationTargetContainerLengthCeO = ActivationTargetHeight * mm + ActivationTargetThicknessCeO;
-const auto ActivationTargetContainerAirWidth = ActivationTargetThicknessSmO;
-const auto ActivationTargetContainerAirWidthCeO = ActivationTargetThicknessCeO;
-const auto ActivationTargetContainerAirOuterDiameter = 25.4 * mm; //From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-const auto ActivationTargetContainerAirInnerDiameter = 12. * mm; //From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetContainerOuterDiameter = 25.4 * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  // const auto ActivationTargetContainerInnerDiameter = 12. * mm;
+  const auto ActivationTargetHeight = 4.5 * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetContainerThickness = 1.5 * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetContainerLength = ActivationTargetHeight * mm + ActivationTargetThicknessSmO;
+  const auto ActivationTargetContainerLengthCeO = ActivationTargetHeight * mm + ActivationTargetThicknessCeO;
+  const auto ActivationTargetContainerAirWidth = ActivationTargetThicknessSmO;
+  const auto ActivationTargetContainerAirWidthCeO = ActivationTargetThicknessCeO;
+  const auto ActivationTargetContainerAirOuterDiameter = 25.4 * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetContainerAirInnerDiameter = 12. * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
 
-//-------Activation Target Au
+  //-------Activation Target Au
 
-const auto ActivationTargetAuOuterDiameter = 12.7 * mm;
-const auto ActivationTargetAuThickness = 0.02 * mm; //not the real value just for building 
+  const auto ActivationTargetAuOuterDiameter = 12.7 * mm;
+  const auto ActivationTargetAuThickness = 0.02 * mm; // not the real value just for building
 
-//-----Activation Target Container Lid----
+  //-----Activation Target Container Lid----
 
-const auto ActivationTargetLidOuterDiameter = 12. * mm;//From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-const auto ActivationTargetLidInnerDiameter = 10. * mm;//From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-const auto ActivationTargetLidInnerHeight = 2. *mm + ActivationTargetThicknessSmO;
-const auto ActivationTargetLidInnerHeightCeO = 2. *mm + ActivationTargetThicknessCeO;
-const auto ActivationTargetLidHeight = 3. * mm;//From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
-const auto ActivationTargetLidHeightCeO = 3. * mm; //From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetLidOuterDiameter = 12. * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetLidInnerDiameter = 10. * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetLidInnerHeight = 2. * mm + ActivationTargetThicknessSmO;
+  const auto ActivationTargetLidInnerHeightCeO = 2. * mm + ActivationTargetThicknessCeO;
+  const auto ActivationTargetLidHeight = 3. * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
+  const auto ActivationTargetLidHeightCeO = 3. * mm; // From activation target container draw: https://elog.ikp.physik.tu-darmstadt.de/clovershare/829
 
-//------Green Holder------
+  //------Green Holder------
 
-const auto greenholderheight = 69.85 * mm;//From technical draw 
-const auto greenholderlength = 254.0 * mm;//From technical draw 
-const auto greenholderwidth = 2.921 * mm;//From technical draw 
-const auto greenholderbottomlength = 88.9 * mm;//From technical draw 
-const auto greenholderdistance = 82.55 * mm;//From technical draw
+  const auto greenholderheight = 69.85 * mm; // From technical draw
+  const auto greenholderlength = 254.0 * mm; // From technical draw
+  const auto greenholderwidth = 2.921 * mm; // From technical draw
+  const auto greenholderbottomlength = 88.9 * mm; // From technical draw
+  const auto greenholderdistance = 82.55 * mm; // From technical draw
 
-//------Offset------
+  //------Offset------
 
-const auto offset= 0.0508*mm;
+  const auto offset = 0.0508 * mm;
 
-//-----Slide----- 
+  //-----Slide-----
 
-auto const slidelength = 82.55 * mm;//From technical draw
-auto const slideheight = 63.5 * mm;//From technical draw
-auto const slidewidth = 1.58369 * mm;//From technical draw
-auto const holediameter = 36.322 * mm;//From technical draw
-auto const holewidth = 1.58369 * mm;//From technical draw
+  auto const slidelength = 82.55 * mm; // From technical draw
+  auto const slideheight = 63.5 * mm; // From technical draw
+  auto const slidewidth = 1.58369 * mm; // From technical draw
+  auto const holediameter = 36.322 * mm; // From technical draw
+  auto const holewidth = 1.58369 * mm; // From technical draw
 
-// ------Detector Holder-----
+  // ------Detector Holder-----
 
-const auto greendetectorholderouterdiameterI = 101.6 * mm;//From technical draw
-const auto greendetectorholderinnerdiameterI = 58.42 * mm;//From technical draw
-const auto greendetectorholderwidthI = 1.778 * mm;//From technical draw
+  const auto greendetectorholderouterdiameterI = 101.6 * mm; // From technical draw
+  const auto greendetectorholderinnerdiameterI = 58.42 * mm; // From technical draw
+  const auto greendetectorholderwidthI = 1.778 * mm; // From technical draw
 
-const auto greendetectorholderouterdiameterII = 101.6 * mm;//From technical draw
-const auto greendetectorholderinnerdiameterII = 76.2 * mm; //From technical draw
-const auto greendetectorholderwidthII = 17.653 * mm;//From technical draw
+  const auto greendetectorholderouterdiameterII = 101.6 * mm; // From technical draw
+  const auto greendetectorholderinnerdiameterII = 76.2 * mm; // From technical draw
+  const auto greendetectorholderwidthII = 17.653 * mm; // From technical draw
 
-const auto greendetectorholderouterdiameterIII = 88.9 * mm;//From technical draw
-const auto greendetectorholderinnerdiameterIII = 76.2 * mm;//From technical draw
-const auto greendetectorholderwidthIII = 38.1 * mm;//From technical draw
+  const auto greendetectorholderouterdiameterIII = 88.9 * mm; // From technical draw
+  const auto greendetectorholderinnerdiameterIII = 76.2 * mm; // From technical draw
+  const auto greendetectorholderwidthIII = 38.1 * mm; // From technical draw
 
-//------Detector Planar----
+  //------Detector Planar----
 
-const auto detectorFirstLayerOuterDiameter = 76.1 * mm;
+  const auto detectorFirstLayerOuterDiameter = 76.1 * mm;
 
-const auto detectorWindowOuterDiameter = 58.42 * mm;
-const auto detectorWindowInnerDiameter = 0. * mm;
-const auto detectorWindowThickness = 0.5 * mm;
+  const auto detectorWindowOuterDiameter = 58.42 * mm;
+  const auto detectorWindowInnerDiameter = 0. * mm;
+  const auto detectorWindowThickness = 0.5 * mm;
 
-const auto detectorSecondLayerInnerDiameter = 73.6 * mm;
-const auto detectorNr3Length = 140. * mm;
+  const auto detectorSecondLayerInnerDiameter = 73.6 * mm;
+  const auto detectorNr3Length = 140. * mm;
 
-const auto detectorCrystalOuterDiameter = 58.42 * mm;
-const auto detectorCrystalInnerDiameter = 0. * mm;
-const auto detectorCrystalLength = 21.* mm;
+  const auto detectorCrystalOuterDiameter = 58.42 * mm;
+  const auto detectorCrystalInnerDiameter = 0. * mm;
+  const auto detectorCrystalLength = 21. * mm;
 
-const auto detectorCrystalBerylliumWindowDistance = 5. * mm;
+  const auto detectorCrystalBerylliumWindowDistance = 5. * mm;
 
-const auto detectorNr3VacuumLength = 138* mm;
+  const auto detectorNr3VacuumLength = 138 * mm;
 
-//-------Detector Coaxial-----
+  //-------Detector Coaxial-----
 
-const auto detectorNr4VacuumLength = 138*mm;
-const auto detectorCoaxialSecondLayerLength = 140. * mm;
+  const auto detectorNr4VacuumLength = 138 * mm;
+  const auto detectorCoaxialSecondLayerLength = 140. * mm;
 
-const auto detectorCoaxialCrystalOuterDiameter = 56. * mm;
-const auto detectorCoaxialCrystalInnerDiameter = 0. * mm;
-const auto detectorCoaxialCrystalLength = 53.5* mm;
+  const auto detectorCoaxialCrystalOuterDiameter = 56. * mm;
+  const auto detectorCoaxialCrystalInnerDiameter = 0. * mm;
+  const auto detectorCoaxialCrystalLength = 53.5 * mm;
 
-const auto detectorCoaxialCrystalAirOuterDiameter = 9. * mm;
-const auto detectorCoaxialCrystalAirLength = 22. * mm;
+  const auto detectorCoaxialCrystalAirOuterDiameter = 9. * mm;
+  const auto detectorCoaxialCrystalAirLength = 22. * mm;
 
-//-----Table-----
+  //-----Table-----
 
-const auto tableheight =700. * mm;
-const auto tablelength = 250. * mm;
-const auto tablewidth = 2.5 * mm;
+  const auto tableheight = 700. * mm;
+  const auto tablelength = 250. * mm;
+  const auto tablewidth = 2.5 * mm;
 
-const auto tablefeetlength = 200. *mm;
-const auto tablefeetheight = 300.0 * mm;
-const auto tablefeetwidth = 30. *mm;
+  const auto tablefeetlength = 200. * mm;
+  const auto tablefeetheight = 300.0 * mm;
+  const auto tablefeetwidth = 30. * mm;
 
-//------World-------------
+  //------World-------------
 
-const auto worldX = (activationRoomWidth + activationSideWallThickness) * 2;
-const auto worldZ = (activationRoomLength + activationSideWallThickness) * 2;
-const auto worldY = (activationRoomHeight) * 2;
- 
-auto *worldSolid = new G4Box("worldSolid", worldX / 2., worldY / 2., worldZ / 2.);
-auto *worldLogical = new G4LogicalVolume(worldSolid, nist->FindOrBuildMaterial("G4_AIR"), "worldlogical");
-G4VPhysicalVolume *worldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), worldLogical, "world", nullptr, false, 0);
-auto worldVis = G4VisAttributes(red);
-worldVis.SetForceWireframe(true);
-worldLogical->SetVisAttributes(worldVis);
+  const auto worldX = (activationRoomWidth + activationSideWallThickness) * 2;
+  const auto worldZ = (activationRoomLength + activationSideWallThickness) * 2;
+  const auto worldY = (activationRoomHeight)*2;
 
-//-------Floor and Walls--------
+  auto *worldSolid = new G4Box("worldSolid", worldX / 2., worldY / 2., worldZ / 2.);
+  auto *worldLogical = new G4LogicalVolume(worldSolid, nist->FindOrBuildMaterial("G4_AIR"), "worldlogical");
+  G4VPhysicalVolume *worldPhysical = new G4PVPlacement(nullptr, G4ThreeVector(), worldLogical, "world", nullptr, false, 0);
+  auto worldVis = G4VisAttributes(red);
+  worldVis.SetForceWireframe(true);
+  worldLogical->SetVisAttributes(worldVis);
 
-auto *activationFloorSolid = new G4Box("activationFloorSolid", worldX / 2., activationRoomFloorThickness / 2., worldZ / 2.);
-auto *activationFloorLogical = new G4LogicalVolume(activationFloorSolid, nist->FindOrBuildMaterial("G4_CONCRETE"), "activationFloorLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,-(activationRoomHeight + activationRoomFloorThickness / 2), 0), activationFloorLogical, "activationFloor", worldLogical, false, 0);
-activationFloorLogical->SetVisAttributes(grey);
+  //-------Floor and Walls--------
 
+  auto *activationFloorSolid = new G4Box("activationFloorSolid", worldX / 2., activationRoomFloorThickness / 2., worldZ / 2.);
+  auto *activationFloorLogical = new G4LogicalVolume(activationFloorSolid, nist->FindOrBuildMaterial("G4_CONCRETE"), "activationFloorLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, -(activationRoomHeight + activationRoomFloorThickness / 2), 0), activationFloorLogical, "activationFloor", worldLogical, false, 0);
+  activationFloorLogical->SetVisAttributes(grey);
 
-auto *activationSideWallSolid = new G4Box("activationSideWallSolid", worldX / 2., activationRoomHeight , activationSideWallThickness / 2.);
-auto *activationSideWallLogical = new G4LogicalVolume(activationSideWallSolid, nist->FindOrBuildMaterial("G4_CONCRETE"), "activationSideWallLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0, 0, activationRoomLength + 75. * mm), activationSideWallLogical, "activationSideWall", worldLogical, false, 0);
-auto activationSideWallVis = G4VisAttributes(grey);
-activationSideWallVis.SetForceWireframe(true);
-activationSideWallLogical->SetVisAttributes(activationSideWallVis);
+  auto *activationSideWallSolid = new G4Box("activationSideWallSolid", worldX / 2., activationRoomHeight, activationSideWallThickness / 2.);
+  auto *activationSideWallLogical = new G4LogicalVolume(activationSideWallSolid, nist->FindOrBuildMaterial("G4_CONCRETE"), "activationSideWallLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, activationRoomLength + 75. * mm), activationSideWallLogical, "activationSideWall", worldLogical, false, 0);
+  auto activationSideWallVis = G4VisAttributes(grey);
+  activationSideWallVis.SetForceWireframe(true);
+  activationSideWallLogical->SetVisAttributes(activationSideWallVis);
 
-auto *activationSideWallSolidleft = new G4Box("activationSideWallSolidleft", worldX / 2., activationRoomHeight , activationSideWallThickness / 2.);
-auto *activationSideWallleftLogical = new G4LogicalVolume(activationSideWallSolidleft, nist->FindOrBuildMaterial("G4_CONCRETE"), "activationSideWallleftLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -activationRoomLength - 75. * mm), activationSideWallleftLogical, "activationSideWallleft", worldLogical, false, 0);
-auto activationSideWallleftVis = G4VisAttributes(grey);
-activationSideWallleftVis.SetForceWireframe(true);
-activationSideWallleftLogical->SetVisAttributes(activationSideWallleftVis);
+  auto *activationSideWallSolidleft = new G4Box("activationSideWallSolidleft", worldX / 2., activationRoomHeight, activationSideWallThickness / 2.);
+  auto *activationSideWallleftLogical = new G4LogicalVolume(activationSideWallSolidleft, nist->FindOrBuildMaterial("G4_CONCRETE"), "activationSideWallleftLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -activationRoomLength - 75. * mm), activationSideWallleftLogical, "activationSideWallleft", worldLogical, false, 0);
+  auto activationSideWallleftVis = G4VisAttributes(grey);
+  activationSideWallleftVis.SetForceWireframe(true);
+  activationSideWallleftLogical->SetVisAttributes(activationSideWallleftVis);
 
-//-----Table-----
+  //-----Table-----
 
-auto *tableSolid = new G4Box("tableSolid", tablelength / 2., tablewidth / 2., tableheight / 2.);
-auto * tableLogical = new G4LogicalVolume(tableSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "table;Logical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,-greenholderheight /2. - greenholderwidth / 2. - 2 * tablewidth, 0), tableLogical, "table", worldLogical, false, 0);
-tableLogical->SetVisAttributes(darkGrey);
+  auto *tableSolid = new G4Box("tableSolid", tablelength / 2., tablewidth / 2., tableheight / 2.);
+  auto *tableLogical = new G4LogicalVolume(tableSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "table;Logical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, -greenholderheight / 2. - greenholderwidth / 2. - 2 * tablewidth, 0), tableLogical, "table", worldLogical, false, 0);
+  tableLogical->SetVisAttributes(darkGrey);
 
-auto *tablefeetSolid = new G4Box("tablefeetSolid", tablefeetlength / 2., tablefeetheight / 2., tablefeetwidth / 2.);
-auto * tablefeetLogical = new G4LogicalVolume(tablefeetSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "tablefeetLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,-greenholderheight / 2. - greenholderwidth - 2 * tablewidth - tablelength / 2. -ThreeScrewHolderOuterDiameter / 2. -5. * mm, -tableheight / 2. + tablefeetwidth / 2. ), tablefeetLogical, "table", worldLogical, false, 0);
-tablefeetLogical->SetVisAttributes(darkGrey);
+  auto *tablefeetSolid = new G4Box("tablefeetSolid", tablefeetlength / 2., tablefeetheight / 2., tablefeetwidth / 2.);
+  auto *tablefeetLogical = new G4LogicalVolume(tablefeetSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "tablefeetLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, -greenholderheight / 2. - greenholderwidth - 2 * tablewidth - tablelength / 2. - ThreeScrewHolderOuterDiameter / 2. - 5. * mm, -tableheight / 2. + tablefeetwidth / 2.), tablefeetLogical, "table", worldLogical, false, 0);
+  tablefeetLogical->SetVisAttributes(darkGrey);
 
-auto *tablefeetrigthSolid = new G4Box("tablefeetrightSolid", tablefeetlength / 2., tablefeetheight / 2., tablefeetwidth / 2.);
-auto * tablefeetrightLogical = new G4LogicalVolume(tablefeetSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "tablefeetrightLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,-greenholderheight / 2. - greenholderwidth - 2 * tablewidth - tablelength / 2. -ThreeScrewHolderOuterDiameter / 2. -5. * mm, +tableheight / 2. - tablefeetwidth / 2. ), tablefeetrightLogical, "table", worldLogical, false, 0);
-tablefeetrightLogical->SetVisAttributes(darkGrey);
+  auto *tablefeetrigthSolid = new G4Box("tablefeetrightSolid", tablefeetlength / 2., tablefeetheight / 2., tablefeetwidth / 2.);
+  auto *tablefeetrightLogical = new G4LogicalVolume(tablefeetSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "tablefeetrightLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, -greenholderheight / 2. - greenholderwidth - 2 * tablewidth - tablelength / 2. - ThreeScrewHolderOuterDiameter / 2. - 5. * mm, +tableheight / 2. - tablefeetwidth / 2.), tablefeetrightLogical, "table", worldLogical, false, 0);
+  tablefeetrightLogical->SetVisAttributes(darkGrey);
 
-//------ Green Holder-----
+  //------ Green Holder-----
 
-auto *greenholderBoxLeftSolid = new G4Box("greenholderBoxLeftSolid", greenholderwidth / 2., greenholderheight / 2., greenholderlength / 2.);
-auto *greenholderBoxLeftLogical = new G4LogicalVolume(greenholderBoxLeftSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greenholderBoxLeftLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(greenholderdistance / 2. + greenholderwidth/2. ,0,-77.*mm), greenholderBoxLeftLogical, "greenholdetBocLeft", worldLogical, false, 0); // greenholderlength = 254.0 * mm and if the activation target is in the center og it -> 254.0 / 2 = 127. * mm. Since activation target is 50.* mm from the detector -> 127. *mm - 50.*mm = 77. * mm; So I shifting the green holder with -77.*mm (to the left)
-auto greenholderBoxLeftVis = G4VisAttributes(green);
-greenholderBoxLeftVis.SetForceWireframe(true);
-greenholderBoxLeftLogical->SetVisAttributes(greenholderBoxLeftVis);
+  auto *greenholderBoxLeftSolid = new G4Box("greenholderBoxLeftSolid", greenholderwidth / 2., greenholderheight / 2., greenholderlength / 2.);
+  auto *greenholderBoxLeftLogical = new G4LogicalVolume(greenholderBoxLeftSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greenholderBoxLeftLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(greenholderdistance / 2. + greenholderwidth / 2., 0, -77. * mm), greenholderBoxLeftLogical, "greenholdetBocLeft", worldLogical, false, 0); // greenholderlength = 254.0 * mm and if the activation target is in the center og it -> 254.0 / 2 = 127. * mm. Since activation target is 50.* mm from the detector -> 127. *mm - 50.*mm = 77. * mm; So I shifting the green holder with -77.*mm (to the left)
+  auto greenholderBoxLeftVis = G4VisAttributes(green);
+  greenholderBoxLeftVis.SetForceWireframe(true);
+  greenholderBoxLeftLogical->SetVisAttributes(greenholderBoxLeftVis);
 
-auto *greenholderBoxRightSolid = new G4Box("greenholderBoxRightSolid", greenholderwidth / 2., greenholderheight / 2., greenholderlength / 2.);
-auto*greenholderBoxRightLogical = new G4LogicalVolume(greenholderBoxRightSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greenholderBoxRightLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(-greenholderdistance / 2. - greenholderwidth/2., 0, -77.*mm), greenholderBoxRightLogical, "greenholderBoxRight", worldLogical, false, 0);
-auto greenholderBoxRightVis = G4VisAttributes(green);
-greenholderBoxRightVis.SetForceWireframe(true);
-greenholderBoxRightLogical->SetVisAttributes(greenholderBoxRightVis);
+  auto *greenholderBoxRightSolid = new G4Box("greenholderBoxRightSolid", greenholderwidth / 2., greenholderheight / 2., greenholderlength / 2.);
+  auto *greenholderBoxRightLogical = new G4LogicalVolume(greenholderBoxRightSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greenholderBoxRightLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(-greenholderdistance / 2. - greenholderwidth / 2., 0, -77. * mm), greenholderBoxRightLogical, "greenholderBoxRight", worldLogical, false, 0);
+  auto greenholderBoxRightVis = G4VisAttributes(green);
+  greenholderBoxRightVis.SetForceWireframe(true);
+  greenholderBoxRightLogical->SetVisAttributes(greenholderBoxRightVis);
 
-auto *greenholderBoxBottomSolid = new G4Box("greenholderBoxBottomSolid", greenholderbottomlength / 2., greenholderwidth / 2., greenholderlength / 2.);
-auto *greenholderBoxBottomLogical = new G4LogicalVolume(greenholderBoxBottomSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greenholderBoxBottomLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,-tablewidth / 2. - greenholderheight / 2., -77.*mm), greenholderBoxBottomLogical, "greenholderBoxBottom", worldLogical, false, 0);
-greenholderBoxBottomLogical->SetVisAttributes(green);
+  auto *greenholderBoxBottomSolid = new G4Box("greenholderBoxBottomSolid", greenholderbottomlength / 2., greenholderwidth / 2., greenholderlength / 2.);
+  auto *greenholderBoxBottomLogical = new G4LogicalVolume(greenholderBoxBottomSolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greenholderBoxBottomLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, -tablewidth / 2. - greenholderheight / 2., -77. * mm), greenholderBoxBottomLogical, "greenholderBoxBottom", worldLogical, false, 0);
+  greenholderBoxBottomLogical->SetVisAttributes(green);
 
-//------Green Detector Holder -----
+  //------Green Detector Holder -----
 
-auto *greendetectorholderISolid = new G4Tubs("greedetectorholderSolid", greendetectorholderinnerdiameterI / 2., greendetectorholderouterdiameterI / 2., greendetectorholderwidthI/ 2., 0, twopi);
-auto *greendetectorholderILogical = new G4LogicalVolume(greendetectorholderISolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greendetectorholderILogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm+ greendetectorholderwidthI / 2.), greendetectorholderILogical, "greendetectorholder", worldLogical, false, 0);
+  auto *greendetectorholderISolid = new G4Tubs("greedetectorholderSolid", greendetectorholderinnerdiameterI / 2., greendetectorholderouterdiameterI / 2., greendetectorholderwidthI / 2., 0, twopi);
+  auto *greendetectorholderILogical = new G4LogicalVolume(greendetectorholderISolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greendetectorholderILogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI / 2.), greendetectorholderILogical, "greendetectorholder", worldLogical, false, 0);
   greendetectorholderILogical->SetVisAttributes(green);
 
-auto *greendetectorholderIISolid = new G4Tubs("greedetectorholderSolid", greendetectorholderinnerdiameterII / 2., greendetectorholderouterdiameterII / 2., greendetectorholderwidthII/ 2., 0, twopi);
-auto *greendetectorholderIILogical = new G4LogicalVolume(greendetectorholderIISolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greendetectorholderIILogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI + greendetectorholderwidthII / 2.),greendetectorholderIILogical, "greendetectorholder", worldLogical, false, 0);
-greendetectorholderIILogical->SetVisAttributes(green);
+  auto *greendetectorholderIISolid = new G4Tubs("greedetectorholderSolid", greendetectorholderinnerdiameterII / 2., greendetectorholderouterdiameterII / 2., greendetectorholderwidthII / 2., 0, twopi);
+  auto *greendetectorholderIILogical = new G4LogicalVolume(greendetectorholderIISolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greendetectorholderIILogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI + greendetectorholderwidthII / 2.), greendetectorholderIILogical, "greendetectorholder", worldLogical, false, 0);
+  greendetectorholderIILogical->SetVisAttributes(green);
 
-auto *greendetectorholderIIISolid = new G4Tubs("greendetectorholderIII", greendetectorholderinnerdiameterIII / 2., greendetectorholderouterdiameterIII / 2., greendetectorholderwidthIII / 2., 0, twopi);
-auto *greendetectorholderIIILogical = new G4LogicalVolume(greendetectorholderIIISolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greendetectorholderIIILogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI + greendetectorholderwidthII + greendetectorholderwidthIII / 2.), greendetectorholderIIILogical, "greendetectorholder", worldLogical, false, 0);
-greendetectorholderIIILogical->SetVisAttributes(green);
+  auto *greendetectorholderIIISolid = new G4Tubs("greendetectorholderIII", greendetectorholderinnerdiameterIII / 2., greendetectorholderouterdiameterIII / 2., greendetectorholderwidthIII / 2., 0, twopi);
+  auto *greendetectorholderIIILogical = new G4LogicalVolume(greendetectorholderIIISolid, nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "greendetectorholderIIILogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +50. * mm + greendetectorholderwidthI + greendetectorholderwidthII + greendetectorholderwidthIII / 2.), greendetectorholderIIILogical, "greendetectorholder", worldLogical, false, 0);
+  greendetectorholderIIILogical->SetVisAttributes(green);
 
-//------Slide----
+  //------Slide----
 
-auto *slideSolidBox = new G4Box("slideSolidBox", slidelength / 2., slideheight / 2., slidewidth / 2.);
-auto *slideSolidHole = new G4Tubs("slideSolidHole", 0., holediameter / 2., holewidth / 2 + subtractionSolidBuffer, 0, twopi);
-auto *slideSolid = new G4SubtractionSolid("slideSolid", slideSolidBox, slideSolidHole, nullptr, G4ThreeVector(0, 0, 0));
+  auto *slideSolidBox = new G4Box("slideSolidBox", slidelength / 2., slideheight / 2., slidewidth / 2.);
+  auto *slideSolidHole = new G4Tubs("slideSolidHole", 0., holediameter / 2., holewidth / 2 + subtractionSolidBuffer, 0, twopi);
+  auto *slideSolid = new G4SubtractionSolid("slideSolid", slideSolidBox, slideSolidHole, nullptr, G4ThreeVector(0, 0, 0));
 
-auto *slideLogical = new G4LogicalVolume(slideSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "slideLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), slideLogical, "slide", worldLogical, false, 0);
-slideLogical->SetVisAttributes(lightGrey); 
+  auto *slideLogical = new G4LogicalVolume(slideSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "slideLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), slideLogical, "slide", worldLogical, false, 0);
+  slideLogical->SetVisAttributes(lightGrey);
 
-//----Three Screw Holder-----
+  //----Three Screw Holder-----
 
-const auto threescrewholderlidthickness = 1.6002 * mm;
-const auto densityAcrylicMaterial = 1.18 * g/cm3;
+  const auto threescrewholderlidthickness = 1.6002 * mm;
+  const auto densityAcrylicMaterial = 1.18 * g / cm3;
 
-auto *Acrylic = new G4Material("Acrylic", densityAcrylicMaterial, 3);
-Acrylic->AddElement(nist->FindOrBuildElement("C"),5);
-Acrylic->AddElement(nist->FindOrBuildElement("H"),8);
-Acrylic->AddElement(nist->FindOrBuildElement("O"),2);
+  auto *Acrylic = new G4Material("Acrylic", densityAcrylicMaterial, 3);
+  Acrylic->AddElement(nist->FindOrBuildElement("C"), 5);
+  Acrylic->AddElement(nist->FindOrBuildElement("H"), 8);
+  Acrylic->AddElement(nist->FindOrBuildElement("O"), 2);
 
-auto *ThreeScrewHolderSolid = new G4Tubs("ThreeScrewHolderSolid", ThreeScrewHolderInnerDiameter / 2., ThreeScrewHolderOuterDiameter / 2., ThreeScrewHolderLength / 2., 0, twopi);
-auto *GrooveSolid = new G4Tubs("GrooveSolid", ThreeScrewHolderGrooveInnerDiamter / 2., ThreeScrewHolderGrooveOuterDiameter / 2. + SubtractionSolidBuffer1 / 2., ThreeScrewHolderGrooveWidth / 2., 0, twopi);
+  auto *ThreeScrewHolderSolid = new G4Tubs("ThreeScrewHolderSolid", ThreeScrewHolderInnerDiameter / 2., ThreeScrewHolderOuterDiameter / 2., ThreeScrewHolderLength / 2., 0, twopi);
+  auto *GrooveSolid = new G4Tubs("GrooveSolid", ThreeScrewHolderGrooveInnerDiamter / 2., ThreeScrewHolderGrooveOuterDiameter / 2. + SubtractionSolidBuffer1 / 2., ThreeScrewHolderGrooveWidth / 2., 0, twopi);
 
-auto *ThreeScrewHolderGrooveSub = new G4SubtractionSolid("ThreeScrewHolderGrooveSub", ThreeScrewHolderSolid, GrooveSolid, nullptr, G4ThreeVector(0,0, +(ThreeScrewHolderLength / 2. - ThreeScrewHolderTopLength - ThreeScrewHolderGrooveWidth / 2.)));
+  auto *ThreeScrewHolderGrooveSub = new G4SubtractionSolid("ThreeScrewHolderGrooveSub", ThreeScrewHolderSolid, GrooveSolid, nullptr, G4ThreeVector(0, 0, +(ThreeScrewHolderLength / 2. - ThreeScrewHolderTopLength - ThreeScrewHolderGrooveWidth / 2.)));
 
-auto *ThreeScrewHolderLogical = new G4LogicalVolume(ThreeScrewHolderGrooveSub,Acrylic, "ThreeScrewHolderLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-(ThreeScrewHolderLength / 2. - ThreeScrewHolderTopLength - ThreeScrewHolderGrooveWidth / 2.)), ThreeScrewHolderLogical, "ThreeScrewHolder", worldLogical, false, 0);
-ThreeScrewHolderLogical->SetVisAttributes(grey);
+  auto *ThreeScrewHolderLogical = new G4LogicalVolume(ThreeScrewHolderGrooveSub, Acrylic, "ThreeScrewHolderLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -(ThreeScrewHolderLength / 2. - ThreeScrewHolderTopLength - ThreeScrewHolderGrooveWidth / 2.)), ThreeScrewHolderLogical, "ThreeScrewHolder", worldLogical, false, 0);
+  ThreeScrewHolderLogical->SetVisAttributes(grey);
 
-auto *ThreeScrewHolderAirSolid = new G4Tubs("ThreeScrewHolderAirSolid", ThreeScrewHolderInnerDiameter / 2., ThreeScrewHolderAirOuterDiamter / 2., ThreeScrewHolderAirLength / 2., 0, twopi);
-auto *ThreeScrewHolderAirLogical = new G4LogicalVolume(ThreeScrewHolderAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "ThreeScrewHolderAirLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, ThreeScrewHolderLength / 2. - ThreeScrewHolderAirLength / 2. - threescrewholderlidthickness),ThreeScrewHolderAirLogical, "threescrewholderAIR", ThreeScrewHolderLogical, false, 0);
-ThreeScrewHolderAirLogical->SetVisAttributes(blue);
+  auto *ThreeScrewHolderAirSolid = new G4Tubs("ThreeScrewHolderAirSolid", ThreeScrewHolderInnerDiameter / 2., ThreeScrewHolderAirOuterDiamter / 2., ThreeScrewHolderAirLength / 2., 0, twopi);
+  auto *ThreeScrewHolderAirLogical = new G4LogicalVolume(ThreeScrewHolderAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "ThreeScrewHolderAirLogical");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, ThreeScrewHolderLength / 2. - ThreeScrewHolderAirLength / 2. - threescrewholderlidthickness), ThreeScrewHolderAirLogical, "threescrewholderAIR", ThreeScrewHolderLogical, false, 0);
+  ThreeScrewHolderAirLogical->SetVisAttributes(blue);
 
-const auto activationTargetInnerDiameter = 12. * mm;
-double targetnatSmO_Density ;
-double natSmO_Container_Mass;
-double targetnatCeO_Density;
-double natCeO_Container_Mass;
-double Au_Mass ;
-double targetAu_Density;
+  const auto activationTargetInnerDiameter = 12. * mm;
+  double targetnatSmO_Density;
+  double natSmO_Container_Mass;
+  double targetnatCeO_Density;
+  double natCeO_Container_Mass;
+  double Au_Mass;
+  double targetAu_Density;
 
-//-----Collimator-----
+  //-----Collimator-----
 
-const auto collimatorRoomCollimatorAperture = 8. * mm;
-const auto utrFirstLeadWallToTargetPos = 60. * inch; // From nutr: Estimated
-const auto utrFirstLeadWallLength = 8. * inch; // From nutr
-const auto utrUpstreamWallToTargetPos = utrFirstLeadWallToTargetPos + utrFirstLeadWallLength;
-const auto utrUpstreamWallThickness = 162. * mm; // Measured off utr drawings
-const auto collimatorRoomSecondLeadWallLength = 16. * inch; // From nutr
-const auto activationTargetHolderToTargetPos = 54.0 * inch; // From ELOG https://elog.ikp.physik.tu-darmstadt.de/clovershare/2025
-const auto collimatorRoomSecondLeadWallToTargetPos = utrUpstreamWallToTargetPos + utrUpstreamWallThickness;
-const auto collimatorRoomFirstLeadWallToTargetPos = collimatorRoomSecondLeadWallToTargetPos + collimatorRoomSecondLeadWallLength + 320. * mm; // From nutr
-const auto collimatorRoomFirstLeadWallLength = 16. * inch; // From nutr
-const auto collimatorRoomCollimatorToTargetPos = collimatorRoomFirstLeadWallToTargetPos + collimatorRoomFirstLeadWallLength + 200. * mm;
+  const auto collimatorRoomCollimatorAperture = 8. * mm;
+  const auto utrFirstLeadWallToTargetPos = 60. * inch; // From nutr: Estimated
+  const auto utrFirstLeadWallLength = 8. * inch; // From nutr
+  const auto utrUpstreamWallToTargetPos = utrFirstLeadWallToTargetPos + utrFirstLeadWallLength;
+  const auto utrUpstreamWallThickness = 162. * mm; // Measured off utr drawings
+  const auto collimatorRoomSecondLeadWallLength = 16. * inch; // From nutr
+  const auto activationTargetHolderToTargetPos = 54.0 * inch; // From ELOG https://elog.ikp.physik.tu-darmstadt.de/clovershare/2025
+  const auto collimatorRoomSecondLeadWallToTargetPos = utrUpstreamWallToTargetPos + utrUpstreamWallThickness;
+  const auto collimatorRoomFirstLeadWallToTargetPos = collimatorRoomSecondLeadWallToTargetPos + collimatorRoomSecondLeadWallLength + 320. * mm; // From nutr
+  const auto collimatorRoomFirstLeadWallLength = 16. * inch; // From nutr
+  const auto collimatorRoomCollimatorToTargetPos = collimatorRoomFirstLeadWallToTargetPos + collimatorRoomFirstLeadWallLength + 200. * mm;
 
-const auto collisionPointToCollimator = 53. * m;
-const auto collisionPointToActivationTargetPos = collisionPointToCollimator + collimatorRoomCollimatorToTargetPos + activationTargetHolderToTargetPos;
-const auto beamDiameterAtActivationTargetPos = collimatorRoomCollimatorAperture * collisionPointToActivationTargetPos / collisionPointToCollimator;
+  const auto collisionPointToCollimator = 53. * m;
+  const auto collisionPointToActivationTargetPos = collisionPointToCollimator + collimatorRoomCollimatorToTargetPos + activationTargetHolderToTargetPos;
+  const auto beamDiameterAtActivationTargetPos = collimatorRoomCollimatorAperture * collisionPointToActivationTargetPos / collisionPointToCollimator;
 
+  std::cout << "DetectorConstruction: Requested TARGET is '" << TARGET << "'\n";
+  if (TARGET == "SmO_8") {
+    natSmO_Container_Mass = (2.05587 - 1.88185) * g;
+  } else if (TARGET == "SmO_9") {
+    natSmO_Container_Mass = (2.07222 - 1.88257) * g;
+  } else if (TARGET == "SmO_10") {
+    natSmO_Container_Mass = (2.11479 - 1.88234) * g;
+  } else if (TARGET == "SmO_11") {
+    natSmO_Container_Mass = (2.07366 - 1.88180) * g;
+  } else if (TARGET == "SmO_12") {
+    natSmO_Container_Mass = (2.03059 - 1.88428) * g;
+  } else if (TARGET == "SmO_13") {
+    natSmO_Container_Mass = (2.09876 - 1.87385) * g;
+  } else if (TARGET == "SmO_14") {
+    natSmO_Container_Mass = (2.05948 - 1.88342) * g;
+  } else if (TARGET == "CeO_1") {
+    natCeO_Container_Mass = (2.35393 - 1.88349) * g;
+  } else if (TARGET == "CeO_2") {
+    natCeO_Container_Mass = (2.33186 - 1.88597) * g;
+  } else if (TARGET == "CeO_3") {
+    natCeO_Container_Mass = (2.30733 - 1.88050) * g;
+  } else if (TARGET == "CeO_4") {
+    natCeO_Container_Mass = (2.31009 - 1.87927) * g;
+  } else if (TARGET == "CeO_5") {
+    natCeO_Container_Mass = (2.33911 - 1.88289) * g;
+  } else if (TARGET == "CeO_6") {
+    natCeO_Container_Mass = (2.35403 - 1.88406) * g;
+  } else if (TARGET == "CeO_7") {
+    natCeO_Container_Mass = (2.37485 - 1.88253) * g;
+  } else if (TARGET == "Au_1") {
+    Au_Mass = (0.05169) * g;
+  } else if (TARGET == "Au_2") {
+    Au_Mass = (0.04535) * g;
+  } else if (TARGET == "Au_3") {
+    Au_Mass = (0.04798) * g;
+  } else if (TARGET == "Au_4") {
+    Au_Mass = (0.04818) * g;
+  } else if (TARGET == "Au_5") {
+    Au_Mass = (0.04950) * g;
+  } else if (TARGET == "Au_6") {
+    Au_Mass = (0.04987) * g;
+  } else if (TARGET == "Au_7") {
+    Au_Mass = (0.05209) * g;
+  } else if (TARGET == "Au_8") {
+    Au_Mass = (0.04526) * g;
+  } else if (TARGET == "Au_9") {
+    Au_Mass = (0.04776) * g;
+  } else if (TARGET == "Au_10") {
+    Au_Mass = (0.04534) * g;
+  } else if (TARGET == "Au_11") {
+    Au_Mass = (0.04860) * g;
+  } else if (TARGET == "Au_12") {
+    Au_Mass = (0.05168) * g;
+  } else if (TARGET == "MixSource3") {
 
+    const auto calibrationMixSourceDiameter3 = 25.4 * mm;
+    const auto calibrationMixSourceThickness3 = 3.734 * mm; // not sure, from excel Sean sent
 
-std::cout << "DetectorConstruction: Requested TARGET is '" << TARGET << "'\n";
-if (TARGET == "SmO_8") {
-natSmO_Container_Mass = (2.05587-1.88185) * g;
-} else if (TARGET == "SmO_9"){
- natSmO_Container_Mass = (2.07222-1.88257) * g;
-} else if (TARGET == "SmO_10"){
- natSmO_Container_Mass = (2.11479-1.88234) * g;
-} else if (TARGET =="SmO_11"){
- natSmO_Container_Mass = (2.07366-1.88180) * g;
-} else if (TARGET == "SmO_12"){
- natSmO_Container_Mass = (2.03059-1.88428) * g;
-} else if (TARGET == "SmO_13"){
- natSmO_Container_Mass = (2.09876-1.87385) * g;
-} else if (TARGET == "SmO_14"){
- natSmO_Container_Mass = (2.05948-1.88342) * g;
-} else if (TARGET == "CeO_1"){
- natCeO_Container_Mass = (2.35393-1.88349) * g;
-} else if (TARGET == "CeO_2"){
- natCeO_Container_Mass = (2.33186-1.88597) * g;
-} else if (TARGET == "CeO_3"){
-natCeO_Container_Mass = (2.30733-1.88050) * g;
-} else if (TARGET == "CeO_4"){
- natCeO_Container_Mass = (2.31009-1.87927) * g;
-} else if (TARGET == "CeO_5"){
-natCeO_Container_Mass = (2.33911-1.88289) * g;
-} else if (TARGET == "CeO_6"){
- natCeO_Container_Mass = (2.35403-1.88406) * g;
-} else if (TARGET == "CeO_7"){
-natCeO_Container_Mass = (2.37485-1.88253) * g;
-} else if (TARGET == "Au_1"){
- Au_Mass = (0.05169) * g;
-} else if (TARGET == "Au_2"){
- Au_Mass = (0.04535) * g;
-} else if (TARGET == "Au_3"){
- Au_Mass = (0.04798) * g;
- }else if (TARGET == "Au_4"){
- Au_Mass = (0.04818) * g;
-} else if (TARGET == "Au_5"){
-Au_Mass = (0.04950) * g;
-} else if (TARGET == "Au_6"){
-Au_Mass = (0.04987) * g;
-} else if (TARGET == "Au_7"){
- Au_Mass = (0.05209) * g;
-} else if (TARGET == "Au_8"){
- Au_Mass = (0.04526) * g;
-} else if (TARGET == "Au_9"){
- Au_Mass = (0.04776) * g;
-} else if (TARGET == "Au_10"){
- Au_Mass = (0.04534) * g;
-} else if (TARGET == "Au_11"){
- Au_Mass = (0.04860) * g;
-} else if (TARGET == "Au_12"){
- Au_Mass = (0.05168) * g;
-} else if (TARGET == "MixSource3"){
+    auto *calibrationMixSource3Solid = new G4Tubs("calibrationMixSource3Solid", 0., calibrationMixSourceDiameter3 / 2., calibrationMixSourceThickness3 / 2., 0, twopi);
+    auto *calibrationMixSource3Logical = new G4LogicalVolume(calibrationMixSource3Solid, Acrylic, "calibrationMixSource");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), calibrationMixSource3Logical, "calibrationMixSource", ThreeScrewHolderAirLogical, false, 0);
+    calibrationMixSource3Logical->SetVisAttributes(red);
+  } else if (TARGET == "MixSource4") {
 
-const auto calibrationMixSourceDiameter3 = 25.4 * mm;
-const auto calibrationMixSourceThickness3 = 3.734 * mm; //not sure, from excel Sean sent
+    const auto calibrationMixSourceDiameter4 = 25.4 * mm;
+    const auto calibrationMixSourceThickness4 = 3.734 * mm; // not sure, from excel Sean sent
 
-auto *calibrationMixSource3Solid = new G4Tubs("calibrationMixSource3Solid", 0., calibrationMixSourceDiameter3 / 2., calibrationMixSourceThickness3 / 2., 0, twopi);
-auto *calibrationMixSource3Logical = new G4LogicalVolume(calibrationMixSource3Solid, Acrylic, "calibrationMixSource");
-new G4PVPlacement(nullptr,G4ThreeVector(0,0,0), calibrationMixSource3Logical,"calibrationMixSource", ThreeScrewHolderAirLogical, false, 0);
-calibrationMixSource3Logical->SetVisAttributes(red);
-} else if (TARGET == "MixSource4"){
+    auto *calibrationMixSource4Solid = new G4Tubs("calibrationMixSource4Solid", 0., calibrationMixSourceDiameter4 / 2., calibrationMixSourceThickness4 / 2., 0, twopi);
+    auto *calibrationMixSource4Logical = new G4LogicalVolume(calibrationMixSource4Solid, Acrylic, "calibrationMixSource");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), calibrationMixSource4Logical, "calibrationMixSource", ThreeScrewHolderAirLogical, false, 0);
+    calibrationMixSource4Logical->SetVisAttributes(red);
+  } else if (TARGET == "none") {
+  }
 
-const auto calibrationMixSourceDiameter4 = 25.4 * mm;
-const auto calibrationMixSourceThickness4 = 3.734 * mm; //not sure, from excel Sean sent
+  if (TARGET == "SmO_8" || TARGET == "SmO_9" || TARGET == "SmO_10" || TARGET == "SmO_11" || TARGET == "SmO_12" || TARGET == "SmO_13" || TARGET == "SmO_14") {
 
-auto *calibrationMixSource4Solid = new G4Tubs("calibrationMixSource4Solid", 0., calibrationMixSourceDiameter4 / 2., calibrationMixSourceThickness4 / 2., 0, twopi);
-auto *calibrationMixSource4Logical = new G4LogicalVolume(calibrationMixSource4Solid, Acrylic, "calibrationMixSource");
-new G4PVPlacement(nullptr,G4ThreeVector(0,0,0), calibrationMixSource4Logical,"calibrationMixSource", ThreeScrewHolderAirLogical, false, 0);
-calibrationMixSource4Logical->SetVisAttributes(red);
-} else if (TARGET == "none"){}
+    targetnatSmO_Density = natSmO_Container_Mass / (pi / 4. * activationTargetInnerDiameter * activationTargetInnerDiameter * ActivationTargetThicknessSmO);
 
-if (TARGET == "SmO_8" || TARGET == "SmO_9" || TARGET == "SmO_10" || TARGET == "SmO_11" || TARGET == "SmO_12" || TARGET == "SmO_13" || TARGET == "SmO_14" ){
+    auto *activation154Sm_nat_container_Material = new G4Material("natSmO_Container_Material", targetnatSmO_Density, 2);
+    activation154Sm_nat_container_Material->AddElement(nist->FindOrBuildElement("Sm"), 2); // 2 Sm atoms in Sm(2)O(3)
+    activation154Sm_nat_container_Material->AddElement(nist->FindOrBuildElement("O"), 3); // 3 O atoms in Sm(2)O(3)
 
-targetnatSmO_Density = natSmO_Container_Mass / (pi / 4. * activationTargetInnerDiameter * activationTargetInnerDiameter * ActivationTargetThicknessSmO);
+    auto *ActivationTargetContainerSolid = new G4Tubs("ActivationTargteHolderSolid", 0., ActivationTargetContainerOuterDiameter / 2., ActivationTargetContainerLength / 2., 0, twopi);
+    auto *ActivationTargetContainerLogical = new G4LogicalVolume(ActivationTargetContainerSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "ActivationTargetContainerLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -ThreeScrewHolderAirLength / 2. + ActivationTargetContainerLength / 2. + ThreeScrewHolderGrooveWidth / 2. + ThreeScrewHolderBottomAirWidth - ActivationTargetContainerThickness - offset), ActivationTargetContainerLogical, "activationtargetcontainer", ThreeScrewHolderAirLogical, false, 0);
+    ActivationTargetContainerLogical->SetVisAttributes(green);
 
-auto *activation154Sm_nat_container_Material = new G4Material("natSmO_Container_Material", targetnatSmO_Density, 2);
-activation154Sm_nat_container_Material->AddElement(nist->FindOrBuildElement("Sm"), 2); // 2 Sm atoms in Sm(2)O(3)
-activation154Sm_nat_container_Material->AddElement(nist->FindOrBuildElement("O"), 3); // 3 O atoms in Sm(2)O(3)
+    auto *ActivationTargetSolid = new G4Tubs("ActivationTargetSolid", 0., ActivationTargetOuterDiameter / 2., ActivationTargetThicknessSmO / 2., 0, twopi);
+    auto *ActivationTargetSolidLogical = new G4LogicalVolume(ActivationTargetSolid, activation154Sm_nat_container_Material, "ActivationTargetLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -ActivationTargetContainerLength / 2. + ActivationTargetThicknessSmO / 2. + ActivationTargetContainerThickness), ActivationTargetSolidLogical, "activationtarget", ActivationTargetContainerLogical, false, 0);
+    ActivationTargetSolidLogical->SetVisAttributes(orange);
 
-auto *ActivationTargetContainerSolid = new G4Tubs("ActivationTargteHolderSolid", 0., ActivationTargetContainerOuterDiameter / 2., ActivationTargetContainerLength / 2., 0, twopi);
-auto *ActivationTargetContainerLogical = new G4LogicalVolume(ActivationTargetContainerSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "ActivationTargetContainerLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ThreeScrewHolderAirLength / 2. + ActivationTargetContainerLength /2. +ThreeScrewHolderGrooveWidth / 2. +ThreeScrewHolderBottomAirWidth - ActivationTargetContainerThickness - offset), ActivationTargetContainerLogical,"activationtargetcontainer", ThreeScrewHolderAirLogical, false, 0);
-ActivationTargetContainerLogical->SetVisAttributes(green); 
+    auto *ActivationTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid", 0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetThicknessSmO / 2., 0., twopi);
+    auto *ActivationTargetIrradiatedLogical = new G4LogicalVolume(ActivationTargetIrradiatedSolid, activation154Sm_nat_container_Material, "ActivationTargetIrradiatedLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), ActivationTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetSolidLogical, false, 0);
+    ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
 
-auto *ActivationTargetSolid = new G4Tubs("ActivationTargetSolid", 0.,ActivationTargetOuterDiameter / 2.,ActivationTargetThicknessSmO / 2., 0, twopi);
-auto *ActivationTargetSolidLogical = new G4LogicalVolume(ActivationTargetSolid, activation154Sm_nat_container_Material,"ActivationTargetLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ActivationTargetContainerLength/2.+ ActivationTargetThicknessSmO/2.+ ActivationTargetContainerThickness), ActivationTargetSolidLogical, "activationtarget", ActivationTargetContainerLogical, false, 0);
-ActivationTargetSolidLogical->SetVisAttributes(orange);
+    auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidth / 2., 0, twopi);
+    auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "ActivationTargetContainerAirSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, ActivationTargetContainerLength / 2. - ActivationTargetContainerAirWidth / 2.), ActivationTargetContainerAirLogical, "ActivationTargetContainerAir", ActivationTargetContainerLogical, false, 0);
+    ActivationTargetContainerAirLogical->SetVisAttributes(blue);
 
-auto *ActivationTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid",0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetThicknessSmO / 2., 0., twopi);
-auto *ActivationTargetIrradiatedLogical = new G4LogicalVolume(ActivationTargetIrradiatedSolid, activation154Sm_nat_container_Material, "ActivationTargetIrradiatedLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), ActivationTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetSolidLogical, false, 0);
-ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
+    auto *ActivationTargetLidSolid = new G4Tubs("ActivationTargetLidSolid", 0., ActivationTargetLidOuterDiameter / 2., ActivationTargetLidHeight / 2., 0, twopi);
+    auto *ActivationTargetLidLogical = new G4LogicalVolume(ActivationTargetLidSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "activationtargetlidLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, +ActivationTargetContainerLength / 2. - ActivationTargetLidHeight / 2), ActivationTargetLidLogical, "activationtargtelid", ActivationTargetContainerLogical, false, 0);
+    ActivationTargetLidLogical->SetVisAttributes(red);
 
-auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidth / 2., 0, twopi);
-auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"),"ActivationTargetContainerAirSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, ActivationTargetContainerLength / 2. - ActivationTargetContainerAirWidth / 2.), ActivationTargetContainerAirLogical, "ActivationTargetContainerAir", ActivationTargetContainerLogical, false, 0);
-ActivationTargetContainerAirLogical->SetVisAttributes(blue);
+    auto *ActivationTargetLidAirSolid = new G4Tubs("ActivationTargetLidAirSolid", 0., ActivationTargetLidInnerDiameter / 2., ActivationTargetLidInnerHeight / 2., 0, twopi);
+    auto *ActivationTargetLidAirLogical = new G4LogicalVolume(ActivationTargetLidAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "activationtargetLidAir");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, +ActivationTargetLidHeight / 2. - ActivationTargetLidInnerHeight / 2.), ActivationTargetLidAirLogical, "activationtargetLIDAIR", ActivationTargetLidLogical, false, 0);
+    ActivationTargetLidAirLogical->SetVisAttributes(blue);
+  } else if (TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6" || TARGET == "CeO_7") {
 
-auto *ActivationTargetLidSolid = new G4Tubs("ActivationTargetLidSolid", 0., ActivationTargetLidOuterDiameter / 2., ActivationTargetLidHeight / 2., 0, twopi);
-auto *ActivationTargetLidLogical = new G4LogicalVolume(ActivationTargetLidSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "activationtargetlidLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,+ ActivationTargetContainerLength/2. - ActivationTargetLidHeight /2 ), ActivationTargetLidLogical, "activationtargtelid", ActivationTargetContainerLogical, false, 0);
-ActivationTargetLidLogical->SetVisAttributes(red);
+    targetnatCeO_Density = natCeO_Container_Mass / (pi / 4. * activationTargetInnerDiameter * activationTargetInnerDiameter * ActivationTargetThicknessCeO);
 
-auto *ActivationTargetLidAirSolid = new G4Tubs("ActivationTargetLidAirSolid", 0., ActivationTargetLidInnerDiameter / 2., ActivationTargetLidInnerHeight / 2., 0, twopi);
-auto *ActivationTargetLidAirLogical = new G4LogicalVolume(ActivationTargetLidAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "activationtargetLidAir");
-new G4PVPlacement(nullptr,G4ThreeVector(0,0,+ActivationTargetLidHeight / 2. - ActivationTargetLidInnerHeight / 2. ), ActivationTargetLidAirLogical, "activationtargetLIDAIR", ActivationTargetLidLogical, false, 0);
-ActivationTargetLidAirLogical->SetVisAttributes(blue);
-}
-else if ( TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6"|| TARGET == "CeO_7"){
+    auto *activationCeO_nat_container_Material = new G4Material("natSmO_Container8_Material", targetnatCeO_Density, 2);
+    activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("Ce"), 1); // 1 Ce atoms in Ce(1)O(2)
+    activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("O"), 2); // 2 O atoms in Ce(1)O(2)
 
-targetnatCeO_Density = natCeO_Container_Mass / (pi / 4. * activationTargetInnerDiameter * activationTargetInnerDiameter * ActivationTargetThicknessCeO);
+    auto *ActivationTargetContainerSolid = new G4Tubs("ActivationTargteHolderSolid", 0., ActivationTargetContainerOuterDiameter / 2., ActivationTargetContainerLengthCeO / 2., 0, twopi);
+    auto *ActivationTargetContainerLogical = new G4LogicalVolume(ActivationTargetContainerSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "ActivationTargetContainerLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -ThreeScrewHolderAirLength / 2. + ActivationTargetContainerLength / 2. + ThreeScrewHolderGrooveWidth / 2. + ThreeScrewHolderBottomAirWidth - ActivationTargetContainerThickness - offset), ActivationTargetContainerLogical, "activationtargetcontainer", ThreeScrewHolderAirLogical, false, 0);
+    ActivationTargetContainerLogical->SetVisAttributes(green);
 
-auto *activationCeO_nat_container_Material = new G4Material("natSmO_Container8_Material", targetnatCeO_Density, 2);
-activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("Ce"), 1); // 1 Ce atoms in Ce(1)O(2)
-activationCeO_nat_container_Material->AddElement(nist->FindOrBuildElement("O"), 2); // 2 O atoms in Ce(1)O(2)
+    auto *ActivationTargetSolid = new G4Tubs("ActivationTargetSolid", 0., ActivationTargetOuterDiameter / 2., ActivationTargetThicknessCeO / 2., 0, twopi);
+    auto *ActivationTargetSolidLogical = new G4LogicalVolume(ActivationTargetSolid, activationCeO_nat_container_Material, "ActivationTargetLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -ActivationTargetContainerLengthCeO / 2. + ActivationTargetThicknessCeO / 2. + ActivationTargetContainerThickness), ActivationTargetSolidLogical, "activationtarget", ActivationTargetContainerLogical, false, 0);
+    ActivationTargetSolidLogical->SetVisAttributes(orange);
 
-auto *ActivationTargetContainerSolid = new G4Tubs("ActivationTargteHolderSolid", 0., ActivationTargetContainerOuterDiameter / 2., ActivationTargetContainerLengthCeO / 2., 0, twopi);
-auto *ActivationTargetContainerLogical = new G4LogicalVolume(ActivationTargetContainerSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "ActivationTargetContainerLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ThreeScrewHolderAirLength / 2. + ActivationTargetContainerLength /2. +ThreeScrewHolderGrooveWidth / 2. +ThreeScrewHolderBottomAirWidth - ActivationTargetContainerThickness - offset), ActivationTargetContainerLogical,  "activationtargetcontainer", ThreeScrewHolderAirLogical, false, 0);
-ActivationTargetContainerLogical->SetVisAttributes(green); 
+    auto *ActivationTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid", 0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetThicknessCeO / 2., 0., twopi);
+    auto *ActivationTargetIrradiatedLogical = new G4LogicalVolume(ActivationTargetIrradiatedSolid, activationCeO_nat_container_Material, "ActivationTargetIrradiatedLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), ActivationTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetSolidLogical, false, 0);
+    ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
 
-auto *ActivationTargetSolid = new G4Tubs("ActivationTargetSolid", 0.,ActivationTargetOuterDiameter / 2.,  ActivationTargetThicknessCeO / 2., 0, twopi);
-auto *ActivationTargetSolidLogical = new G4LogicalVolume(ActivationTargetSolid, activationCeO_nat_container_Material,"ActivationTargetLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ActivationTargetContainerLengthCeO /2. + ActivationTargetThicknessCeO/2. + ActivationTargetContainerThickness), ActivationTargetSolidLogical, "activationtarget", ActivationTargetContainerLogical, false, 0);
-ActivationTargetSolidLogical->SetVisAttributes(orange);
+    auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidthCeO / 2., 0, twopi);
+    auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "ActivationTargetContainerAirSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, ActivationTargetContainerLengthCeO / 2. - ActivationTargetContainerAirWidthCeO / 2.), ActivationTargetContainerAirLogical, "ActivationTargetContainerAir", ActivationTargetContainerLogical, false, 0);
+    ActivationTargetContainerAirLogical->SetVisAttributes(blue);
 
-auto *ActivationTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid",0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetThicknessCeO / 2., 0., twopi);
-auto *ActivationTargetIrradiatedLogical = new G4LogicalVolume(ActivationTargetIrradiatedSolid, activationCeO_nat_container_Material, "ActivationTargetIrradiatedLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), ActivationTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetSolidLogical, false, 0);
-ActivationTargetIrradiatedLogical->SetVisAttributes(orange);
+    auto *ActivationTargetLidSolid = new G4Tubs("ActivationTargetLidSolid", 0., ActivationTargetLidOuterDiameter / 2., ActivationTargetLidHeightCeO / 2., 0, twopi);
+    auto *ActivationTargetLidLogical = new G4LogicalVolume(ActivationTargetLidSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "activationtargetlidLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, +ActivationTargetContainerLengthCeO / 2. - ActivationTargetLidHeightCeO / 2), ActivationTargetLidLogical, "activationtargtelid", ActivationTargetContainerLogical, false, 0);
+    ActivationTargetLidLogical->SetVisAttributes(red);
 
-auto *ActivationTargetContainerAirSolid = new G4Tubs("ActivationTargetContainerAirSolid", ActivationTargetContainerAirInnerDiameter / 2., ActivationTargetContainerAirOuterDiameter / 2., ActivationTargetContainerAirWidthCeO / 2., 0, twopi);
-auto *ActivationTargetContainerAirLogical = new G4LogicalVolume(ActivationTargetContainerAirSolid, nist->FindOrBuildMaterial("G4_AIR"),"ActivationTargetContainerAirSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, ActivationTargetContainerLengthCeO / 2. - ActivationTargetContainerAirWidthCeO / 2.), ActivationTargetContainerAirLogical, "ActivationTargetContainerAir", ActivationTargetContainerLogical, false, 0);
-ActivationTargetContainerAirLogical->SetVisAttributes(blue);
+    auto *ActivationTargetLidAirSolid = new G4Tubs("ActivationTargetLidAirSolid", 0., ActivationTargetLidInnerDiameter / 2., ActivationTargetLidInnerHeightCeO / 2., 0, twopi);
+    auto *ActivationTargetLidAirLogical = new G4LogicalVolume(ActivationTargetLidAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "activationtargetLidAir");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, +ActivationTargetLidHeightCeO / 2. - ActivationTargetLidInnerHeightCeO / 2.), ActivationTargetLidAirLogical, "activationtargetLIDAIR", ActivationTargetLidLogical, false, 0);
+    ActivationTargetLidAirLogical->SetVisAttributes(blue);
+  } else if (TARGET == "Au_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12") {
 
-auto *ActivationTargetLidSolid = new G4Tubs("ActivationTargetLidSolid", 0., ActivationTargetLidOuterDiameter / 2., ActivationTargetLidHeightCeO / 2., 0, twopi);
-auto *ActivationTargetLidLogical = new G4LogicalVolume(ActivationTargetLidSolid, nist->FindOrBuildMaterial("G4_POLYETHYLENE"), "activationtargetlidLogical"); 
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,+ ActivationTargetContainerLengthCeO/2. - ActivationTargetLidHeightCeO /2), ActivationTargetLidLogical, "activationtargtelid", ActivationTargetContainerLogical, false, 0);
-ActivationTargetLidLogical->SetVisAttributes(red);
+    targetAu_Density = Au_Mass / (pi / 4. * ActivationTargetAuOuterDiameter * ActivationTargetAuOuterDiameter * ActivationTargetAuThickness);
+    auto *targetNatCMaterial = new G4Material("targetAuMaterial", targetAu_Density, nist->FindOrBuildMaterial("G4_Au"));
 
-auto *ActivationTargetLidAirSolid = new G4Tubs("ActivationTargetLidAirSolid", 0., ActivationTargetLidInnerDiameter / 2., ActivationTargetLidInnerHeightCeO / 2., 0, twopi);
-auto *ActivationTargetLidAirLogical = new G4LogicalVolume(ActivationTargetLidAirSolid, nist->FindOrBuildMaterial("G4_AIR"), "activationtargetLidAir");
-new G4PVPlacement(nullptr,G4ThreeVector(0,0,+ActivationTargetLidHeightCeO / 2. - ActivationTargetLidInnerHeightCeO / 2.), ActivationTargetLidAirLogical, "activationtargetLIDAIR", ActivationTargetLidLogical, false, 0);
-ActivationTargetLidAirLogical->SetVisAttributes(blue);
-}
-else if (TARGET == "Au_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"){
+    auto *ActivationTargetAuSolid = new G4Tubs("ActivationTargetAuSolid", 0., ActivationTargetAuOuterDiameter / 2., ActivationTargetAuThickness / 2., 0, twopi);
+    auto *ActivationTargetAuLogical = new G4LogicalVolume(ActivationTargetAuSolid, targetNatCMaterial, "ActivationTargetAuLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -ThreeScrewHolderAirLength / 2. + ThreeScrewHolderGrooveWidth / 2. + ThreeScrewHolderBottomAirWidth + offset), ActivationTargetAuLogical, "ActivationTargetAu", ThreeScrewHolderAirLogical, false, 0);
+    ActivationTargetAuLogical->SetVisAttributes(orange);
 
-targetAu_Density = Au_Mass / (pi / 4. * ActivationTargetAuOuterDiameter * ActivationTargetAuOuterDiameter * ActivationTargetAuThickness);
-auto *targetNatCMaterial = new G4Material("targetAuMaterial", targetAu_Density, nist->FindOrBuildMaterial("G4_Au"));
+    auto *AuTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid", 0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetAuThickness / 2., 0., twopi);
+    auto *AuTargetIrradiatedLogical = new G4LogicalVolume(AuTargetIrradiatedSolid, targetNatCMaterial, "AuTargetIrradiatedLogical");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), AuTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetAuLogical, false, 0);
+    AuTargetIrradiatedLogical->SetVisAttributes(orange);
+  }
+  if (TARGET == "SmO_8" || TARGET == "SmO_9" || TARGET == "SmO_10" || TARGET == "SmO_11" || TARGET == "SmO_12" || TARGET == "SmO_13" || TARGET == "SmO_14" || TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6" || TARGET == "CeO_7" || TARGET == "MixSource3") {
 
-auto *ActivationTargetAuSolid = new G4Tubs("ActivationTargetAuSolid", 0., ActivationTargetAuOuterDiameter / 2., ActivationTargetAuThickness / 2., 0, twopi);
-auto *ActivationTargetAuLogical = new G4LogicalVolume(ActivationTargetAuSolid, targetNatCMaterial, "ActivationTargetAuLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0, -ThreeScrewHolderAirLength / 2. +ThreeScrewHolderGrooveWidth / 2. +ThreeScrewHolderBottomAirWidth + offset), ActivationTargetAuLogical, "ActivationTargetAu", ThreeScrewHolderAirLogical, false,0);
-ActivationTargetAuLogical->SetVisAttributes(orange);
+    auto *detectorNr3Solid = new G4Tubs("detectorNr3Solid", 0., detectorFirstLayerOuterDiameter / 2., detectorNr3Length / 2., 0, twopi);
+    auto *detectorNr3Logical = new G4LogicalVolume(detectorNr3Solid, nist->FindOrBuildMaterial("G4_Al"), "detectorNr3Solid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +detectorNr3Length - greendetectorholderwidthII), detectorNr3Logical, "detectorNr3", worldLogical, false, 0);
+    detectorNr3Logical->SetVisAttributes(grey);
 
-auto *AuTargetIrradiatedSolid = new G4Tubs("ActivationTragetIrradiatedSolid",0, std::min(beamDiameterAtActivationTargetPos, ActivationTargetOuterDiameter) / 2., ActivationTargetAuThickness / 2., 0., twopi);
-auto *AuTargetIrradiatedLogical = new G4LogicalVolume(AuTargetIrradiatedSolid, targetNatCMaterial, "AuTargetIrradiatedLogical");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,0), AuTargetIrradiatedLogical, "ActivationTargetIrradiated", ActivationTargetAuLogical, false, 0);
-AuTargetIrradiatedLogical->SetVisAttributes(orange);
-}
-if (TARGET == "SmO_8" || TARGET == "SmO_9" || TARGET == "SmO_10" || TARGET == "SmO_11" || TARGET == "SmO_12" || TARGET == "SmO_13" || TARGET == "SmO_14" || TARGET == "CeO_1" || TARGET == "CeO_2" || TARGET == "CeO_3" || TARGET == "CeO_4" || TARGET == "CeO_5" || TARGET == "CeO_6"|| TARGET == "CeO_7" || TARGET == "MixSource3"){
+    auto *detectorWindowSolid = new G4Tubs("detectorWindowSolid", detectorWindowInnerDiameter / 2., detectorWindowOuterDiameter / 2., detectorWindowThickness / 2., 0, twopi);
+    auto *detectorWindowLogical = new G4LogicalVolume(detectorWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorWindowSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -detectorNr3Length / 2. + detectorWindowThickness / 2), detectorWindowLogical, "detectorFirstLayer", detectorNr3Logical, false, 0);
+    detectorWindowLogical->SetVisAttributes(darkGrey);
 
-auto *detectorNr3Solid = new G4Tubs("detectorNr3Solid", 0., detectorFirstLayerOuterDiameter / 2., detectorNr3Length / 2., 0, twopi);
-auto *detectorNr3Logical = new G4LogicalVolume(detectorNr3Solid, nist->FindOrBuildMaterial("G4_Al"), "detectorNr3Solid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +detectorNr3Length - greendetectorholderwidthII), detectorNr3Logical, "detectorNr3", worldLogical, false, 0);
-detectorNr3Logical->SetVisAttributes(grey);
+    auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorNr3VacuumLength / 2., 0, twopi);
+    auto *detectorVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -detectorWindowThickness), detectorVacuumLogical, "detectorSecondLayer", detectorNr3Logical, false, 0);
+    detectorVacuumLogical->SetVisAttributes(blue);
 
-auto *detectorWindowSolid = new G4Tubs("detectorWindowSolid", detectorWindowInnerDiameter / 2., detectorWindowOuterDiameter / 2., detectorWindowThickness / 2., 0, twopi);
-auto *detectorWindowLogical = new G4LogicalVolume(detectorWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorWindowSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorNr3Length/2. + detectorWindowThickness / 2), detectorWindowLogical, "detectorFirstLayer", detectorNr3Logical, false, 0);
-detectorWindowLogical->SetVisAttributes(darkGrey);
+    Sensitive_Detector_Logical_Volume_Name = "detectorCrystalLogical";
+    auto *detectorCrystalSolid = new G4Tubs("detectorCrystalSolid", detectorCrystalInnerDiameter / 2., detectorCrystalOuterDiameter / 2., detectorCrystalLength / 2., 0, twopi);
+    auto *detectorCrystalLogical = new G4LogicalVolume(detectorCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"), Sensitive_Detector_Logical_Volume_Name);
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -detectorNr3Length / 2. + detectorCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCrystalLogical, "detectorCrystal", detectorVacuumLogical, false, 0);
+    detectorCrystalLogical->SetVisAttributes(blue);
 
-auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorNr3VacuumLength / 2., 0, twopi);
-auto *detectorVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorWindowThickness), detectorVacuumLogical, "detectorSecondLayer", detectorNr3Logical, false, 0);
-detectorVacuumLogical->SetVisAttributes(blue);
+  } else if (TARGET == "Au_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12" || TARGET == "MixSource4") {
 
-Sensitive_Detector_Logical_Volume_Name = "detectorCrystalLogical";
-auto *detectorCrystalSolid = new G4Tubs("detectorCrystalSolid", detectorCrystalInnerDiameter / 2., detectorCrystalOuterDiameter / 2., detectorCrystalLength / 2., 0, twopi);
-auto *detectorCrystalLogical = new G4LogicalVolume(detectorCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),Sensitive_Detector_Logical_Volume_Name);
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorNr3Length / 2. + detectorCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCrystalLogical, "detectorCrystal", detectorVacuumLogical, false, 0);
-detectorCrystalLogical->SetVisAttributes(blue);
+    auto *detectorNr4Solid = new G4Tubs("detectorNr4Solid", 0., detectorFirstLayerOuterDiameter / 2., detectorNr3Length / 2., 0, twopi);
+    auto *detectorNr3Logical = new G4LogicalVolume(detectorNr4Solid, nist->FindOrBuildMaterial("G4_Al"), "detectorNr4Solid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, +tablewidth / 2. + greendetectorholderwidthI / 2., +detectorNr3Length - greendetectorholderwidthII), detectorNr3Logical, "detectorNr3", worldLogical, false, 0);
+    detectorNr3Logical->SetVisAttributes(grey);
 
-}
-else if (TARGET == "Au_1" || TARGET == "Au_2" || TARGET == "Au_3" || TARGET == "Au_4" || TARGET == "Au_5" || TARGET == "Au_6" || TARGET == "Au_6" || TARGET == "Au_7" || TARGET == "Au_8" || TARGET == "Au_9" || TARGET == "Au_10" || TARGET == "Au_11" || TARGET == "Au_12"|| TARGET == "MixSource4"){
+    auto *detectorWindowSolid = new G4Tubs("detectorWindowSolid", detectorWindowInnerDiameter / 2., detectorWindowOuterDiameter / 2., detectorWindowThickness / 2., 0, twopi);
+    auto *detectorWindowLogical = new G4LogicalVolume(detectorWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorWindowSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -detectorNr3Length / 2. + detectorWindowThickness / 2), detectorWindowLogical, "detectorFirstLayer", detectorNr3Logical, false, 0);
+    detectorWindowLogical->SetVisAttributes(darkGrey);
 
+    auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorNr4VacuumLength / 2., 0, twopi);
+    auto *detectorVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -detectorWindowThickness), detectorVacuumLogical, "detectorSecondLayer", detectorNr3Logical, false, 0);
+    detectorVacuumLogical->SetVisAttributes(blue);
 
-auto *detectorNr4Solid = new G4Tubs("detectorNr4Solid", 0., detectorFirstLayerOuterDiameter / 2., detectorNr3Length / 2., 0, twopi);
-auto *detectorNr3Logical = new G4LogicalVolume(detectorNr4Solid, nist->FindOrBuildMaterial("G4_Al"), "detectorNr4Solid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,+tablewidth / 2. + greendetectorholderwidthI / 2., +detectorNr3Length - greendetectorholderwidthII), detectorNr3Logical, "detectorNr3", worldLogical, false, 0);
-detectorNr3Logical->SetVisAttributes(grey);
+    Sensitive_Detector_Logical_Volume_Name = "detectorCoaxialCrystalLogical";
+    auto *detectorCoaxialCrystalSolid = new G4Tubs("detectorCoaxialCrystalSolid", detectorCoaxialCrystalInnerDiameter / 2., detectorCoaxialCrystalOuterDiameter / 2., detectorCoaxialCrystalLength / 2., 0, twopi);
+    auto *detectorCoaxialCrystalLogical = new G4LogicalVolume(detectorCoaxialCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"), Sensitive_Detector_Logical_Volume_Name);
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -detectorCoaxialSecondLayerLength / 2. + detectorCoaxialCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCoaxialCrystalLogical, "detectorCrystal", detectorVacuumLogical, false, 0);
+    detectorCoaxialCrystalLogical->SetVisAttributes(blue);
 
-auto *detectorWindowSolid = new G4Tubs("detectorWindowSolid", detectorWindowInnerDiameter / 2., detectorWindowOuterDiameter / 2., detectorWindowThickness / 2., 0, twopi);
-auto *detectorWindowLogical = new G4LogicalVolume(detectorWindowSolid, nist->FindOrBuildMaterial("G4_Be"), "detectorWindowSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorNr3Length/2. + detectorWindowThickness / 2), detectorWindowLogical, "detectorFirstLayer", detectorNr3Logical, false, 0);
-detectorWindowLogical->SetVisAttributes(darkGrey);
-
-auto *detectorSecondLayerVacuumSolid = new G4Tubs("detectorSecondLayerVacuumSolid", 0., detectorSecondLayerInnerDiameter / 2., detectorNr4VacuumLength / 2., 0, twopi);
-auto *detectorVacuumLogical = new G4LogicalVolume(detectorSecondLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorSecondLayerVacuumSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,- detectorWindowThickness), detectorVacuumLogical, "detectorSecondLayer", detectorNr3Logical, false, 0);
-detectorVacuumLogical->SetVisAttributes(blue);
-
-Sensitive_Detector_Logical_Volume_Name = "detectorCoaxialCrystalLogical";
-auto *detectorCoaxialCrystalSolid = new G4Tubs("detectorCoaxialCrystalSolid", detectorCoaxialCrystalInnerDiameter / 2., detectorCoaxialCrystalOuterDiameter / 2., detectorCoaxialCrystalLength / 2., 0, twopi);
-auto *detectorCoaxialCrystalLogical = new G4LogicalVolume(detectorCoaxialCrystalSolid, nist->FindOrBuildMaterial("G4_Ge"),Sensitive_Detector_Logical_Volume_Name);
-new G4PVPlacement(nullptr, G4ThreeVector(0,0,-detectorCoaxialSecondLayerLength / 2. + detectorCoaxialCrystalLength / 2. + detectorCrystalBerylliumWindowDistance / 2.), detectorCoaxialCrystalLogical, "detectorCrystal", detectorVacuumLogical, false, 0);
-detectorCoaxialCrystalLogical->SetVisAttributes(blue);
-
-auto *detectorCoaxialAirLayerVacuumSolid = new G4Tubs("detectorCoaxialAirLayerVacuumSolid", 0., detectorCoaxialCrystalAirOuterDiameter / 2., detectorCoaxialCrystalAirLength / 2., 0, twopi);
-auto *detectorCoaxialAirLayerVacuumLogical = new G4LogicalVolume(detectorCoaxialAirLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorCoaxialAirLayerVacuumSolid");
-new G4PVPlacement(nullptr, G4ThreeVector(0,0., detectorCoaxialCrystalLength / 2. - detectorCoaxialCrystalAirLength / 2.), detectorCoaxialAirLayerVacuumLogical, "detectorSecondLayer", detectorCoaxialCrystalLogical, false, 0);
-detectorCoaxialAirLayerVacuumLogical->SetVisAttributes(cyan);
-
-}
-return worldPhysical;
+    auto *detectorCoaxialAirLayerVacuumSolid = new G4Tubs("detectorCoaxialAirLayerVacuumSolid", 0., detectorCoaxialCrystalAirOuterDiameter / 2., detectorCoaxialCrystalAirLength / 2., 0, twopi);
+    auto *detectorCoaxialAirLayerVacuumLogical = new G4LogicalVolume(detectorCoaxialAirLayerVacuumSolid, nist->FindOrBuildMaterial("G4_Galactic"), "detectorCoaxialAirLayerVacuumSolid");
+    new G4PVPlacement(nullptr, G4ThreeVector(0, 0., detectorCoaxialCrystalLength / 2. - detectorCoaxialCrystalAirLength / 2.), detectorCoaxialAirLayerVacuumLogical, "detectorSecondLayer", detectorCoaxialCrystalLogical, false, 0);
+    detectorCoaxialAirLayerVacuumLogical->SetVisAttributes(cyan);
+  }
+  return worldPhysical;
 }
 
 void DetectorConstruction::ConstructSDandField() {
