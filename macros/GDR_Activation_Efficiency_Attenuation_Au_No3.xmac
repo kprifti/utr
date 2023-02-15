@@ -12,8 +12,8 @@
 
 #[environmentVariables]
 #filenamePrefix=GDR_Activation_Efficiency_Attenuation_Au_No3_E=
-#filenameSuffix=keV_n=50000000
-#beamOnStatistics=50000000
+#filenameSuffix=keV_n=100000000
+#beamOnStatistics=100000000
 #filenameTemplate={filenamePrefix}{loopVar}{filenameSuffix}
 #setterCmd=/gps/ene/mono {loopVar} keV
 
@@ -60,7 +60,7 @@
 # Disable appendage of additional IDs to filenames (as unique filenames containing the simulated energy will be used for each beamOn)
 /utr/setUseFilenameID False
 # Set the number of required decimal places for padding of loopVar. Supply -1 to disable padding or supply 0 to just add any missing decimal dots.
-/control/alias appendZerosToVarPadding 1
+/control/alias appendZerosToVarPadding -1
 
 
 # Do the usual initialization steps for the simulation
@@ -83,4 +83,4 @@
 # for each Syntax: /control/foreach MacroFile Variable ValueList
 # To use the variable in the macro to be looped refer to it wrapped in {} as {Variable} in the macro
 # Remember that due to the numerical inaccuracies when adding float numbers, a loop might generate a run more or less than expected!
-/control/foreach macros/examples/genericLoopable.mac loopVar 33.3 37.7 38.7 40.9 41.5 47.0 48.2 59.5 65.1 66.8 69.7 75.4 75.7 77.8 83.4 88.0 89.5 97.4 103.2 122.1 145.4 165.9 265.6 279.2 300.1 333.0 355.7 397.7 426.1 604.7 606.8 661.7 795.9 834.8 898.0 1115.5 1173.2 1332.5 1836.1 50 100 150 200 250 300 350 400 450 500 550 600 650 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2200 2400 2600 2800 3000
+/control/foreach macros/examples/genericLoopable.mac loopVar 33 38 38 39 41 42 47 48 60 65 67 70 75 76 78 83 88 89 97 103 122 145 166 266 279 333 356 398 426 605 607 662 796 835 898 1116 1173 1332 1836 50 100 150 200 250 300 350 400 450 500 550 600 650 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2200 2400 2600 2800 3000
